@@ -15,18 +15,18 @@ export class Bazaar {
 	}
 
 	getProducts(): BazaarProduct[] {
-        const all: BazaarProduct[] = []
+		const all: BazaarProduct[] = []
 		for (const product of Object.keys(this.raw.products)) {
-            all.push(this.getProduct(product))
-        }
-        return all
+			all.push(this.getProduct(product))
+		}
+		return all
 	}
 
-    getProductInternalNames() {
-        return this.getProducts().map(product => product.getInternalName())
-    }
+	getProductInternalNames() {
+		return this.getProducts().map((product) => product.getInternalName())
+	}
 
-    getLastUpdated() {
-        return this.raw.lastUpdated
-    }
+	getLastUpdated() {
+		return this.raw.lastUpdated
+	}
 }

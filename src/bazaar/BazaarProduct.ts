@@ -8,9 +8,9 @@ export class BazaarProduct {
 		this.product = product
 	}
 
-    getInternalName() {
-        return InternalName.resolveFromBazaarId(this.getProductId())
-    }
+	getInternalName() {
+		return InternalName.resolveFromBazaarId(this.getProductId())
+	}
 
 	getProductId() {
 		return this.product.product_id

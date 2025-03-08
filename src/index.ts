@@ -34,7 +34,6 @@ cron.schedule("*/20 * * * * *", async (time) => {
 	await bazaarService.update()
 })
 
-
 cron.schedule("0 0 0 * * *", (time) => {
 	if (time instanceof Date) {
 		console.log(`[${time.toISOString()}] Starting auction cleanup.`)
@@ -102,10 +101,8 @@ Bun.serve({
 				sellMarketValue: product.getBuyPrice(),
 				buyMarketValue: product.getSellPrice(),
 				instaBuyAvg1Day: lastDayAvg.avgInstaBuy,
-				instaSellAvg1Day: lastDayAvg.avgInstaSell,
+				instaSellAvg1Day: lastDayAvg.avgInstaSell
 			})
 		}
-
-		
 	}
 })
