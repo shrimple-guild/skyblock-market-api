@@ -1,0 +1,25 @@
+{
+	"name": "skyblock-market-api",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"start": "bun ./src/index.ts",
+		"test": "bun test",
+		"format": "bunx prettier --write ."
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"@types/node-cron": "^3.0.11"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"fuzzysort": "^3.1.0",
+		"node-cron": "^3.0.3",
+		"prismarine-nbt": "^2.7.0",
+		"romans": "^3.0.0",
+		"tar": "^7.4.3"
+	}
+}

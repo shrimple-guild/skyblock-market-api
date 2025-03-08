@@ -1,0 +1,24 @@
+{
+	"product_id": "CHILI_PEPPER",
+	"sell_summary": [
+		{ "amount": 54, "pricePerUnit": 178993.9, "orders": 2 },
+		{ "amount": 3130, "pricePerUnit": 178993.7, "orders": 1 },
+		{ "amount": 394, "pricePerUnit": 178993.4, "orders": 1 }
+	],
+	"buy_summary": [
+		{ "amount": 21, "pricePerUnit": 191844.6, "orders": 1 },
+		{ "amount": 54, "pricePerUnit": 191844.7, "orders": 4 },
+		{ "amount": 50, "pricePerUnit": 191844.8, "orders": 1 }
+	],
+	"quick_status": {
+		"productId": "CHILI_PEPPER",
+		"sellPrice": 178993.70570271113,
+		"sellVolume": 18156,
+		"sellMovingWeek": 344822,
+		"sellOrders": 22,
+		"buyPrice": 191844.72319999998,
+		"buyVolume": 5302,
+		"buyMovingWeek": 793639,
+		"buyOrders": 33
+	}
+}

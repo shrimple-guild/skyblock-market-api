@@ -1,0 +1,16 @@
+{
+	"product_id": "EMPTY",
+	"sell_summary": [],
+	"buy_summary": [],
+	"quick_status": {
+		"productId": "EMPTY",
+		"sellPrice": 0.0,
+		"sellVolume": 0,
+		"sellMovingWeek": 0,
+		"sellOrders": 0,
+		"buyPrice": 0.0,
+		"buyVolume": 0,
+		"buyMovingWeek": 0,
+		"buyOrders": 0
+	}
+}
