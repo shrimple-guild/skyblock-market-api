@@ -5,12 +5,13 @@ import { logCategories } from "../logger"
 
 const logger = logCategories.getLogger("jobs")
 
-function schedule(name: string, expression: string, task: () => Promise<void> | void) {
-	cron.schedule(expression, async (time) => {
+function schedule(name: string, expression: string, task: () => Promise<string> | string | void | Promise<void>) {
+	cron.schedule(expression, async () => {
 		logger.log(`Starting job: ${name}.`)
 		try {
-			await task()
-			logger.log(`Completed job: ${name}.`)
+			const result = await task()
+			logger.log(`Completed job: ${name}`)
+            if (result) logger.log(result)
 		} catch (e) {
 			logger.error(`Job failed: ${name}`)
 			logger.error(e)
@@ -40,11 +41,11 @@ const worker = new Worker("./src/jobs/auction-worker.ts")
 
 schedule("update auctions", "30 * * * * *", async () => {
 	worker.postMessage("update-auctions")
-	const promise: Promise<void> = new Promise((resolve, reject) => {
+	const promise: Promise<string> = new Promise((resolve, reject) => {
 		const listener = (ev: MessageEvent<WorkerMessage>) => {
 			const message = ev.data
 			if (message.success == true) {
-				resolve()
+				resolve(`Saved ${message.bins} BINs.`)
 			} else {
 				reject(message.error)
 			}
