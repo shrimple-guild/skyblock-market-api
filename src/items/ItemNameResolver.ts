@@ -23,7 +23,7 @@ export class ItemNameResolver {
 		const item = this.items.get(name)
 		if (item) {
 			if (extraData == "MAX") {
-				return { 
+				return {
 					internalName: item.internalName,
 					displayName: `[Lvl 100] ${item.displayName}`
 				}

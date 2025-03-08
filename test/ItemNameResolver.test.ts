@@ -5,7 +5,6 @@ import neuItems from "./data/neuitemtest.json"
 const itemResolver = new ItemNameResolver(neuItems)
 
 describe("ItemNameResolver", () => {
-
 	it("should resolve pets", () => {
 		const tiger = itemResolver.resolve("TIGER;3")
 		expect(tiger.displayName).toEqual("Epic Tiger")
@@ -34,5 +33,4 @@ describe("ItemNameResolver", () => {
 		const name = itemResolver.resolve("PET_ITEM_FISHING_SKILL_BOOST_EPIC")
 		expect(name.displayName).toEqual("Epic Fishing Exp Boost")
 	})
-	
 })

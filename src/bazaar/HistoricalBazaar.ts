@@ -52,7 +52,7 @@ export class HistoricalBazaar {
 			current: Math.floor(time / 1000),
 			internalName: internalName,
 			window: Math.floor(window / 1000)
-		}) 
+		})
 		return {
 			avgInstaBuy: result?.avgInstaBuy ?? 0,
 			avgInstaSell: result?.avgInstaSell ?? 0
