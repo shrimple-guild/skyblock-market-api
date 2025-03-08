@@ -19,8 +19,17 @@ export class ItemNameResolver {
 	}
 
 	resolve(internalName: string): ItemName {
-		const name = this.items.get(internalName)
-		if (name) return name
+		const [name, extraData] = internalName.split("+")
+		const item = this.items.get(name)
+		if (item) {
+			if (extraData == "MAX") {
+				return { 
+					internalName: item.internalName,
+					displayName: `[Lvl 100] ${item.displayName}`
+				}
+			}
+			return item
+		}
 		const displayName = internalName
 			.split(/[;_]/)
 			.map((str) => TextUtils.toTitleCase(str))
@@ -34,7 +43,7 @@ export class ItemNameResolver {
 
 		// handle old god pots
 		// TODO make this a data file or maybe even an endpoint to control
-		if (itemData.internalname == "GOD_POTION_2") {
+		if (itemData.internalname == "GOD_POTION") {
 			return "God Potion (Legacy)"
 		}
 

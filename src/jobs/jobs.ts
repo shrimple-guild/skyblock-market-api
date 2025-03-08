@@ -11,7 +11,7 @@ function schedule(name: string, expression: string, task: () => Promise<string> 
 		try {
 			const result = await task()
 			logger.log(`Completed job: ${name}`)
-            if (result) logger.log(result)
+			if (result) logger.log(result)
 		} catch (e) {
 			logger.error(`Job failed: ${name}`)
 			logger.error(e)
