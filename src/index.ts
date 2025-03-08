@@ -13,15 +13,25 @@ if (!port) {
 	throw new Error(`Required environment variable \"MARKET_API_PORT\" not set.`)
 }
 
-const auctions = new AuctionData("./src/data/auction.db")
 const neuItems = new NeuItems("NotEnoughUpdates", "NotEnoughUpdates-REPO", "master", "./src/data")
 await neuItems.load()
-const itemNameResolver = new ItemNameResolver(neuItems.getItemJson())
+let itemNameResolver = new ItemNameResolver(neuItems.getItemJson())
 
 const bazaarService = await BazaarService.init(itemNameResolver, "./src/data/auction.db")
-const auctionService = new AuctionService(auctions, itemNameResolver)
+const auctionService = new AuctionService(itemNameResolver, "./src/data/auction.db")
 
 const worker = new Worker("./src/auctions/update-worker.ts")
+
+cron.schedule("0 0 12 * * *", async (time) => {
+	if (time instanceof Date) {
+		console.log(`[${time.toISOString()}] Starting item name update.`)
+	}
+
+	await neuItems.load()
+	itemNameResolver = new ItemNameResolver(neuItems.getItemJson())
+	bazaarService.updateItemNames(itemNameResolver)
+	auctionService.updateItemNames(itemNameResolver)
+})
 
 cron.schedule("30 * * * * *", (time) => {
 	if (time instanceof Date) {

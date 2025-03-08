@@ -1,13 +1,13 @@
 import fuzzysort from "fuzzysort"
 import type { ItemName, ItemNameResolver } from "../items/ItemNameResolver"
-import type { AuctionData } from "./AuctionData"
+import { AuctionData } from "./AuctionData"
 
 export class AuctionService {
     private auctionData: AuctionData
     private itemNames: ItemNameResolver
 
-    constructor(auctionData: AuctionData, itemNames: ItemNameResolver) {
-        this.auctionData = auctionData
+    constructor(itemNames: ItemNameResolver, path: string) {
+        this.auctionData = new AuctionData(path)
         this.itemNames = itemNames
     }
 
