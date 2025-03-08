@@ -48,13 +48,15 @@ export class HistoricalBazaar {
             WHERE internalName = $internalName
             AND $current - timestamp <= $window
         `
-		return (
-			this.db.query<AverageResult, AveragePriceQuery>(stmt).get({
-				current: Math.floor(time / 1000),
-				internalName: internalName,
-				window: Math.floor(window / 1000)
-			}) ?? { avgInstaBuy: 0, avgInstaSell: 0 }
-		)
+		const result = this.db.query<AverageResult, AveragePriceQuery>(stmt).get({
+			current: Math.floor(time / 1000),
+			internalName: internalName,
+			window: Math.floor(window / 1000)
+		}) 
+		return {
+			avgInstaBuy: result?.avgInstaBuy ?? 0,
+			avgInstaSell: result?.avgInstaSell ?? 0
+		}
 	}
 }
 
