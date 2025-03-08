@@ -82,12 +82,26 @@ Bun.serve({
 
 		"/bazaar/:query": (request) => {
 			const query = request.params.query
-			const data = bazaarService.searchProductData(request.params.query)
-			if (data != null) {
-				return Response.json(data)
-			} else {
-				return new Response(`No item found matching "${query}"`, { status: 404 })
+			const item = bazaarService.searchForProduct(request.params.query)
+			if (!item) {
+				return new Response(`No item found matching "${query}."`, { status: 404 })
 			}
+			return Response.json(bazaarService.getProductData(item))
+		},
+
+		"/bazaar/:query/bulk/:quantity": (request) => {
+			const query = request.params.query
+			const quantity = parseInt(request.params.quantity)
+			const item = bazaarService.searchForProduct(request.params.query)
+			if (!item) {
+				return new Response(`No item found matching "${query}."`, { status: 404 })
+			}	
+
+			if (Number.isNaN(quantity)) {
+				return new Response('"quantity" must be a number.', { status: 400 })
+			}
+			
+			return Response.json(bazaarService.getBulkValue(item, quantity))
 		}
 	}
 })

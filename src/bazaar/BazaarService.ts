@@ -41,19 +41,7 @@ export class BazaarService {
 		this.historical.deleteOldProducts(before)
 	}
 
-	searchProductData(query: string) {
-		const product = this.searchProductInternalName(query)
-		if (!product) return null
-		return this.getProductData(product)
-	}
-
-	searchBulkProduct(query: string, quantity: number) {
-		const product = this.searchProductInternalName(query)
-		if (!product) return null
-		return this.getBulkValue(product, quantity)
-	}
-
-	private searchProductInternalName(query: string): ItemName | null {
+	searchForProduct(query: string): ItemName | null {
 		const names = this.bazaar.getProductInternalNames()
 		const targets = names.map((name) => this.itemNames.resolve(name))
 		const fuzzy = fuzzysort.go(query, targets, { key: "displayName", limit: 1 }).at(0)
@@ -61,7 +49,7 @@ export class BazaarService {
 		return fuzzy.obj
 	}
 
-	private getBulkValue(name: ItemName, quantity: number) {
+	getBulkValue(name: ItemName, quantity: number) {
 		const product = this.bazaar.getProduct(name.internalName)
 		return {
 			name: name.displayName,
@@ -71,7 +59,7 @@ export class BazaarService {
 		}
 	}
 
-	private getProductData(name: ItemName) {
+	getProductData(name: ItemName) {
 		const product = this.bazaar.getProduct(name.internalName)
 		const oneDayAverage = this.historical.getAveragePrice(name.internalName, Date.now(), 24 * 60 * 60 * 100)
 		return {
