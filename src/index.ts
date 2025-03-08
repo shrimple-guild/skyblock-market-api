@@ -1,4 +1,3 @@
-import fuzzysort from "fuzzysort"
 import { AuctionData } from "./auctions/AuctionData"
 import { ItemNameResolver } from "./items/ItemNameResolver"
 import { NeuItems } from "./items/NeuItems"
@@ -26,7 +25,6 @@ cron.schedule("0 0 12 * * *", async (time) => {
 	if (time instanceof Date) {
 		console.log(`[${time.toISOString()}] Starting item name update.`)
 	}
-
 	await neuItems.load()
 	itemNameResolver = new ItemNameResolver(neuItems.getItemJson())
 	bazaarService.updateItemNames(itemNameResolver)
@@ -49,11 +47,10 @@ cron.schedule("*/20 * * * * *", async (time) => {
 
 cron.schedule("0 0 0 * * *", (time) => {
 	if (time instanceof Date) {
-		console.log(`[${time.toISOString()}] Starting auction cleanup.`)
+		console.log(`[${time.toISOString()}] Starting data cleanup.`)
 	}
-	const deleteBefore = Date.now() - 30 * 24 * 60 * 60 * 1000
-	bazaarService.deleteOldProductData(deleteBefore)
-	auctions.deleteOldAuctions(deleteBefore)
+	bazaarService.deleteOldProductData()
+	auctionService.deleteOldAuctionData()
 })
 
 worker.addEventListener("message", (ev) => {

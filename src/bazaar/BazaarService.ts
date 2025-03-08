@@ -37,8 +37,8 @@ export class BazaarService {
 		this.historical.insertProducts(this.bazaar)
 	}
 
-	deleteOldProductData(before: number) {
-		this.historical.deleteOldProducts(before)
+	deleteOldProductData() {
+		this.historical.deleteOldProducts(Date.now() - 30 * 24 * 60 * 60 * 1000)
 	}
 
 	searchForProduct(query: string): ItemName | null {

@@ -15,6 +15,10 @@ export class AuctionService {
 		this.itemNames = newItemNames
 	}
 
+    deleteOldAuctionData() {
+        this.auctionData.deleteOldAuctions(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    }
+
     searchForItem(query: string): ItemName | null {
         const names = this.auctionData.getInternalNames()
         const targets = names.map((name) => this.itemNames.resolve(name))
