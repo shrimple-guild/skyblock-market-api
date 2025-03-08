@@ -3,8 +3,9 @@ import { Readable } from "stream"
 import path from "path"
 import type { NeuItemJson } from "../types/NeuItemJson"
 import { TextUtils } from "../TextUtils"
+import { ItemNameResolver } from "./ItemNameResolver"
 
-export class NeuItems {
+export class NeuItemService {
 	private readonly org: string
 	private readonly repo: string
 	private readonly branch: string
@@ -21,8 +22,8 @@ export class NeuItems {
 		this.items = []
 	}
 
-	getItemJson() {
-		return this.items
+	getItems() {
+		return new ItemNameResolver(this.items)
 	}
 
 	async load() {

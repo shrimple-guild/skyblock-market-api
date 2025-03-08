@@ -41,10 +41,14 @@ function stripNonAscii(text: string): string {
 
 function attemptDeromanize(text: string): string {
 	try {
-		return romans.deromanize(text).toString()
+		return romans.deromanize(text.toUpperCase()).toString()
 	} catch (e) {
 		return text
 	}
+}
+
+function attemptDeromanizeAll(text: string): string {
+	return text.split(" ").map(text => attemptDeromanize(text)).join(" ")
 }
 
 function attemptDeromanizeLast(text: string): string {
@@ -61,5 +65,6 @@ export const TextUtils = {
 	toTitleCase,
 	stripNonAscii,
 	attemptDeromanize,
+	attemptDeromanizeAll,
 	attemptDeromanizeLast
 }

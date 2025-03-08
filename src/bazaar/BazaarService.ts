@@ -4,6 +4,7 @@ import type { ApiSkyblockBazaarJson } from "../types/ApiSkyblockBazaarJson"
 import { Bazaar } from "./Bazaar"
 import type { BazaarProduct } from "./BazaarProduct"
 import { HistoricalBazaar } from "./HistoricalBazaar"
+import { TextUtils } from "../TextUtils"
 
 export class BazaarService {
 	private static URL = "https://api.hypixel.net/skyblock/bazaar"
@@ -42,9 +43,10 @@ export class BazaarService {
 	}
 
 	searchForProduct(query: string): ItemName | null {
+		const queryCleaned = TextUtils.attemptDeromanizeAll(query)
 		const names = this.bazaar.getProductInternalNames()
 		const targets = names.map((name) => this.itemNames.resolve(name))
-		const fuzzy = fuzzysort.go(query, targets, { key: "displayName", limit: 1 }).at(0)
+		const fuzzy = fuzzysort.go(queryCleaned, targets, { key: "displayName", limit: 1 }).at(0)
 		if (!fuzzy) return null
 		return fuzzy.obj
 	}
