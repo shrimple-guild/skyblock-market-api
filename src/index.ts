@@ -12,11 +12,12 @@ if (!port) {
 	throw new Error(`Required environment variable \"MARKET_API_PORT\" not set.`)
 }
 
-const bazaarService = await BazaarService.init("./src/data/auction.db")
 const auctions = new AuctionData("./src/data/auction.db")
 const neuItems = new NeuItems("NotEnoughUpdates", "NotEnoughUpdates-REPO", "master", "./src/data")
 await neuItems.load()
 const itemNameResolver = new ItemNameResolver(neuItems.getItemJson())
+
+const bazaarService = await BazaarService.init(itemNameResolver, "./src/data/auction.db")
 
 const worker = new Worker("./src/auctions/update-worker.ts")
 
@@ -81,28 +82,12 @@ Bun.serve({
 
 		"/bazaar/:query": (request) => {
 			const query = request.params.query
-			const names = bazaarService.getProductInternalNames()
-			const targets = names.map((name) => itemNameResolver.resolve(name))
-			const fuzzy = fuzzysort.go(query, targets, { key: "displayName", limit: 1 }).at(0)
-			if (!fuzzy) {
+			const data = bazaarService.searchProductData(request.params.query)
+			if (data != null) {
+				return Response.json(data)
+			} else {
 				return new Response(`No item found matching "${query}"`, { status: 404 })
 			}
-			const internalName = fuzzy.obj.internalName
-			const product = bazaarService.getProduct(internalName)
-			const lastDayAvg = bazaarService.getProductPriceLastDay(internalName)
-			if (!product || !lastDayAvg) {
-				return new Response(`No recent auctions found for item.`, { status: 404 })
-			}
-			return Response.json({
-				name: fuzzy?.obj.displayName,
-				internalName,
-				instaBuy: product.getInstabuyPrice(),
-				instaSell: product.getInstasellPrice(),
-				sellMarketValue: product.getBuyPrice(),
-				buyMarketValue: product.getSellPrice(),
-				instaBuyAvg1Day: lastDayAvg.avgInstaBuy,
-				instaSellAvg1Day: lastDayAvg.avgInstaSell
-			})
 		}
 	}
 })

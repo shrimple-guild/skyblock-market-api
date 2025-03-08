@@ -69,7 +69,7 @@ export class ItemNameResolver {
 	}
 }
 
-type ItemName = {
+export type ItemName = {
 	displayName: string
 	internalName: string
 }
