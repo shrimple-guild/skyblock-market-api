@@ -5,6 +5,7 @@ import { NeuItems } from "./items/NeuItems"
 import type { WorkerMessage } from "./types/WorkerMessage"
 import cron from "node-cron"
 import { BazaarService } from "./bazaar/BazaarService"
+import { AuctionService } from "./auctions/AuctionService"
 
 const port = Bun.env["MARKET_API_PORT"]
 
@@ -18,6 +19,7 @@ await neuItems.load()
 const itemNameResolver = new ItemNameResolver(neuItems.getItemJson())
 
 const bazaarService = await BazaarService.init(itemNameResolver, "./src/data/auction.db")
+const auctionService = new AuctionService(auctions, itemNameResolver)
 
 const worker = new Worker("./src/auctions/update-worker.ts")
 
@@ -57,27 +59,11 @@ Bun.serve({
 	port,
 	routes: {
 		"/lowestbin/:query": (request) => {
-			const query = request.params.query
-			const names = auctions.getInternalNames()
-			const targets = names.map((name) => itemNameResolver.resolve(name))
-			const fuzzy = fuzzysort.go(query, targets, { key: "displayName", limit: 1 }).at(0)
-			if (!fuzzy) {
-				return new Response(`No item found matching "${query}"`, { status: 404 })
+			const item = auctionService.searchForItem(request.params.query)
+			if (!item) {
+				return new Response(`No item found matching "${item}."`, { status: 404 })
 			}
-			const internalName = fuzzy.obj.internalName
-			const data = auctions.getLatestAuction(internalName)
-			if (!data) {
-				// (this should not actually be possible)
-				return new Response(`No recent auctions found for item.`, { status: 404 })
-			}
-
-			return Response.json({
-				name: fuzzy.obj.displayName,
-				internalName,
-				seenAt: new Date(data.timestamp),
-				current: data.timestamp == data.latestTimestamp,
-				lowestBin: data.lowestBin
-			})
+			return Response.json(auctionService.getItemData(item))
 		},
 
 		"/bazaar/:query": (request) => {
@@ -100,7 +86,7 @@ Bun.serve({
 			if (Number.isNaN(quantity)) {
 				return new Response('"quantity" must be a number.', { status: 400 })
 			}
-			
+
 			return Response.json(bazaarService.getBulkValue(item, quantity))
 		}
 	}
