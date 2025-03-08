@@ -48,7 +48,10 @@ function attemptDeromanize(text: string): string {
 }
 
 function attemptDeromanizeAll(text: string): string {
-	return text.split(" ").map(text => attemptDeromanize(text)).join(" ")
+	return text
+		.split(" ")
+		.map((text) => attemptDeromanize(text))
+		.join(" ")
 }
 
 function attemptDeromanizeLast(text: string): string {

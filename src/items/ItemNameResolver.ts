@@ -32,6 +32,12 @@ export class ItemNameResolver {
 		let cleaned = TextUtils.removeFormatting(itemData.displayname)
 		cleaned = TextUtils.stripNonAscii(cleaned).trim()
 
+		// handle old god pots
+		// TODO make this a data file or maybe even an endpoint to control
+		if (itemData.internalname == "GOD_POTION_2") {
+			return "God Potion (Legacy)"
+		}
+
 		// handle skill exp boost pet items
 		const petItemMatcher = /PET_ITEM_(\w+)_SKILL_BOOST_(\w+)/.exec(itemData.internalname)
 		if (petItemMatcher) {

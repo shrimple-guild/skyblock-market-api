@@ -5,10 +5,8 @@ import type { BunRequest } from "bun"
 
 const logger = logCategories.getLogger("api")
 
-
 const port = Bun.env["MARKET_API_PORT"]
 if (!port) throw new Error(`Required environment variable \"MARKET_API_PORT\" not set.`)
-
 
 function handleRequest(request: BunRequest, handler: () => Promise<Response> | Response) {
 	const url = new URL(request.url)
@@ -36,7 +34,6 @@ Bun.serve({
 				}
 				return Response.json(auctionService.getItemData(item))
 			})
-			
 		},
 
 		"/bazaar/:query": (request) => {
@@ -57,13 +54,13 @@ Bun.serve({
 				const item = bazaarService.searchForProduct(request.params.query)
 				if (!item) {
 					return new Response(`No item found matching "${query}."`, { status: 404 })
-				}	
-	
+				}
+
 				if (Number.isNaN(quantity)) {
 					return new Response('"quantity" must be a number.', { status: 400 })
 				}
 				return Response.json(bazaarService.getBulkValue(item, quantity))
-			})	
+			})
 		}
 	}
 })
