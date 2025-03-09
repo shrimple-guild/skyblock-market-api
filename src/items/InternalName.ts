@@ -19,12 +19,13 @@ function resolveFromBytes(itemBytes: string) {
 
 function resolveFromNbt(tag: NBT): string {
 	const simplified = simplify(tag)
-	const extraAttributes = simplified.i[0].tag.ExtraAttributes
+	const itemTag = simplified.i[0].tag
+	const extraAttributes = itemTag.ExtraAttributes
 	const skyblockId = extraAttributes.id ?? ""
 
 	switch (skyblockId) {
 		case "PET":
-			return resolvePet(extraAttributes)
+			return resolvePet(extraAttributes, itemTag)
 		case "ATTRIBUTE_SHARD":
 			return resolveAttributeShard(extraAttributes)
 		case "RUNE":
@@ -47,27 +48,30 @@ function resolveFromNbt(tag: NBT): string {
 	}
 }
 
-function resolvePet(extraAttributes: any): string {
+function resolvePet(extraAttributes: any, itemTag: any): string {
 	const petTag = JSON.parse(extraAttributes.petInfo)
-	const { tier, maxXp } = getTierInfo(petTag.tier)
-	const bonus = petTag.exp >= maxXp ? "+MAX" : ""
+	const tier = getTier(petTag.tier)
+	const levelRegex = /§7\[Lvl (\d{1,3})\].*/.exec(itemTag.display.Name) 
+	const level = levelRegex ? parseInt(levelRegex[1]) : 0
+	const maxLevel = petTag.type == "GOLDEN_DRAGON" ? 200 : 100
+	const bonus = level == maxLevel ? "+MAX" : ""
 	return `${petTag.type};${tier}${bonus}`
 }
 
-function getTierInfo(tier: string): { tier: number; maxXp: number } {
+function getTier(tier: string): number {
 	switch (tier) {
 		case "COMMON":
-			return { tier: 0, maxXp: 5624785 }
+			return 0
 		case "UNCOMMON":
-			return { tier: 1, maxXp: 8644220 }
+			return 1
 		case "RARE":
-			return { tier: 2, maxXp: 12626665 }
+			return 2
 		case "EPIC":
-			return { tier: 3, maxXp: 18608500 }
+			return 3
 		case "LEGENDARY":
-			return { tier: 4, maxXp: 25353230 }
+			return 4
 		case "MYTHIC":
-			return { tier: 5, maxXp: 25353230 }
+			return 5
 		default:
 			throw new Error(`Unknown tier: ${tier}`)
 	}

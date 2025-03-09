@@ -16,19 +16,19 @@ describe("HistoricalBazaar", () => {
 	it("should insert bazaar", () => {
 	    historicalBazaar.insertProducts(new Bazaar(bazaarResponse))
 		const chiliData = historicalBazaar.getAveragePrice("CHILI_PEPPER", now, 1e6)
-		expect(chiliData.avgInstaBuy).not.toBe(0)
-		expect(chiliData.avgInstaSell).not.toBe(0)
+		expect(chiliData.instaBuy).not.toBe(0)
+		expect(chiliData.instaSell).not.toBe(0)
 	})
 
 	it("should get average prices over window", () => {
 		const data = historicalBazaar.getAveragePrice("product_1", now, 1e6)
-		expect(data.avgInstaBuy).toBe(40)
-		expect(data.avgInstaSell).toBe(30)
+		expect(data.instaBuy).toBe(40)
+		expect(data.instaSell).toBe(30)
 	})
 
 	it("should get no prices if window too small", () => {
 		const data = historicalBazaar.getAveragePrice("product_1", now, 5000)
-		expect(data.avgInstaBuy).toBe(0)
-		expect(data.avgInstaSell).toBe(0)
+		expect(data.instaBuy).toBe(0)
+		expect(data.instaSell).toBe(0)
 	})
 })

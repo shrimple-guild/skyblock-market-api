@@ -11,6 +11,8 @@ describe("ItemNameResolver", () => {
 		expect(tiger.displayName).toEqual("Epic Tiger")
 		const enderDragon = itemResolver.resolve("ENDER_DRAGON;4+MAX")
 		expect(enderDragon.displayName).toEqual("[Lvl 100] Legendary Ender Dragon")
+		const goldenDragon = itemResolver.resolve("GOLDEN_DRAGON;4+MAX")
+		expect(goldenDragon.displayName).toEqual("[Lvl 200] Legendary Golden Dragon")
 	})
 
 	it("should resolve god potion", () => {
