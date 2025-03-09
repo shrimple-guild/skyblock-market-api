@@ -2,7 +2,6 @@ import fuzzysort from "fuzzysort"
 import type { ItemName, ItemNameResolver } from "../items/ItemNameResolver"
 import type { ApiSkyblockBazaarJson } from "../types/ApiSkyblockBazaarJson"
 import { Bazaar } from "./Bazaar"
-import type { BazaarProduct } from "./BazaarProduct"
 import { HistoricalBazaar } from "./HistoricalBazaar"
 import { TextUtils } from "../TextUtils"
 

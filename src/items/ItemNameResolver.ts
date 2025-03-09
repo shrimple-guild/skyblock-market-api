@@ -24,7 +24,7 @@ export class ItemNameResolver {
 		if (item) {
 			if (extraData == "MAX") {
 				return {
-					internalName: item.internalName,
+					internalName: `${item.internalName}+MAX`,
 					displayName: `[Lvl 100] ${item.displayName}`
 				}
 			}
