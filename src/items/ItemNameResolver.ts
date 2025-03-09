@@ -40,12 +40,9 @@ export class ItemNameResolver {
 	private getDisplayNameFromJson(itemData: NeuItemJson) {
 		let cleaned = TextUtils.clean(itemData.displayname)
 
-		// handle old god pots
-		// TODO make this a data file or maybe even an endpoint to control
-		if (itemData.internalname == "GOD_POTION") {
-			return "God Potion (Legacy)"
-		}
-
+		let itemName = irregularItemNames[itemData.internalname]
+		if (itemName) return itemName
+		
 		// handle skill exp boost pet items
 		const petItemMatcher = /PET_ITEM_(\w+)_SKILL_BOOST_(\w+)/.exec(itemData.internalname)
 		if (petItemMatcher) {
@@ -86,4 +83,8 @@ export class ItemNameResolver {
 export type ItemName = {
 	displayName: string
 	internalName: string
+}
+
+const irregularItemNames: Record<string, string | undefined> = {
+    "GOD_POTION": "God Potion (Legacy)"
 }
