@@ -38,8 +38,7 @@ export class ItemNameResolver {
 	}
 
 	private getDisplayNameFromJson(itemData: NeuItemJson) {
-		let cleaned = TextUtils.removeFormatting(itemData.displayname)
-		cleaned = TextUtils.stripNonAscii(cleaned).trim()
+		let cleaned = TextUtils.clean(itemData.displayname)
 
 		// handle old god pots
 		// TODO make this a data file or maybe even an endpoint to control
@@ -70,8 +69,8 @@ export class ItemNameResolver {
 
 		// handle enchanted book display names
 		if (cleaned == "Enchanted Book") {
-			const [name, level] = itemData.internalname.split(";")
-			return `${TextUtils.toTitleCase(name)} ${level} Enchanted Book`
+			const name = TextUtils.toTitleCase(TextUtils.attemptDeromanizeLast(TextUtils.clean(itemData.lore[0])))
+			return `${name} Enchanted Book`
 		}
 
 		return TextUtils.attemptDeromanizeLast(cleaned)

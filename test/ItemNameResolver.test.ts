@@ -1,7 +1,8 @@
 import { describe, it, expect } from "bun:test"
 import { ItemNameResolver } from "../src/items/ItemNameResolver"
-import neuItems from "./data/neuitemtest.json"
+import type { NeuItemJson } from "../src/types/NeuItemJson"
 
+const neuItems: NeuItemJson[] = await Bun.file("./test/data/neuitems.json").json()
 const itemResolver = new ItemNameResolver(neuItems)
 
 describe("ItemNameResolver", () => {
@@ -17,6 +18,11 @@ describe("ItemNameResolver", () => {
 		expect(oldGodPotion.displayName).toEqual("God Potion (Legacy)")
 		const newGodPotion = itemResolver.resolve("GOD_POTION_2")
 		expect(newGodPotion.displayName).toEqual("God Potion")
+	})
+
+	it("should resolve duplex book", () => {
+		const duplex = itemResolver.resolve("ULTIMATE_REITERATE;5")
+		expect(duplex.displayName).toEqual("Duplex 5 Enchanted Book")
 	})
 
 	it("should resolve book", () => {

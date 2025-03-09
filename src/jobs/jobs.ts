@@ -21,8 +21,9 @@ function schedule(name: string, expression: string, task: () => Promise<string> 
 
 schedule("update item names", "0 0 12 * * *", async () => {
 	await neuItemService.load()
-	bazaarService.updateItemNames(neuItemService.getItems())
-	auctionService.updateItemNames(neuItemService.getItems())
+    const resolver = neuItemService.getItemResolver()
+	bazaarService.updateItemNames(resolver)
+	auctionService.updateItemNames(resolver)
 })
 
 schedule("update bazaar products", "*/20 * * * * *", async () => {

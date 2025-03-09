@@ -62,6 +62,10 @@ function attemptDeromanizeLast(text: string): string {
 	return split.join(" ")
 }
 
+function clean(text: string): string {
+	return stripNonAscii(removeFormatting(text)).trim()
+}
+
 export const TextUtils = {
 	removeFormatting,
 	toSnakeCase,
@@ -69,5 +73,6 @@ export const TextUtils = {
 	stripNonAscii,
 	attemptDeromanize,
 	attemptDeromanizeAll,
-	attemptDeromanizeLast
+	attemptDeromanizeLast,
+	clean
 }

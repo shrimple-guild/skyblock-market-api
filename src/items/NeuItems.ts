@@ -22,7 +22,7 @@ export class NeuItemService {
 		this.items = []
 	}
 
-	getItems() {
+	getItemResolver() {
 		return new ItemNameResolver(this.items)
 	}
 
