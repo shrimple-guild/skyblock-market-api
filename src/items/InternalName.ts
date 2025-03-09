@@ -51,7 +51,7 @@ function resolveFromNbt(tag: NBT): string {
 function resolvePet(extraAttributes: any, itemTag: any): string {
 	const petTag = JSON.parse(extraAttributes.petInfo)
 	const tier = getTier(petTag.tier)
-	const levelRegex = /§7\[Lvl (\d{1,3})\].*/.exec(itemTag.display.Name) 
+	const levelRegex = /§7\[Lvl (\d{1,3})\].*/.exec(itemTag.display.Name)
 	const level = levelRegex ? parseInt(levelRegex[1]) : 0
 	const maxLevel = petTag.type == "GOLDEN_DRAGON" ? 200 : 100
 	const bonus = level == maxLevel ? "+MAX" : ""

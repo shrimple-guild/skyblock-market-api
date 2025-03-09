@@ -14,7 +14,7 @@ beforeEach(() => {
 
 describe("HistoricalBazaar", () => {
 	it("should insert bazaar", () => {
-	    historicalBazaar.insertProducts(new Bazaar(bazaarResponse))
+		historicalBazaar.insertProducts(new Bazaar(bazaarResponse))
 		const chiliData = historicalBazaar.getAveragePrice("CHILI_PEPPER", now, 1e6)
 		expect(chiliData.instaBuy).not.toBe(0)
 		expect(chiliData.instaSell).not.toBe(0)

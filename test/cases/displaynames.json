@@ -1,0 +1,47 @@
+[
+	{
+		"description": "pet (not maxed)",
+		"internalName": "TIGER;3",
+		"expectedDisplayName": "Epic Tiger"
+	},
+	{
+		"description": "pet (maxed)",
+		"internalName": "ENDER_DRAGON;4+MAX",
+		"expectedDisplayName": "[Lvl 100] Legendary Ender Dragon"
+	},
+	{
+		"description": "golden dragon (maxed)",
+		"internalName": "GOLDEN_DRAGON;4+MAX",
+		"expectedDisplayName": "[Lvl 200] Legendary Golden Dragon"
+	},
+	{
+		"description": "god pot (legacy)",
+		"internalName": "GOD_POTION",
+		"expectedDisplayName": "God Potion (Legacy)"
+	},
+	{
+		"description": "god pot (modern)",
+		"internalName": "GOD_POTION_2",
+		"expectedDisplayName": "God Potion"
+	},
+	{
+		"description": "duplex book",
+		"internalName": "ULTIMATE_REITERATE;5",
+		"expectedDisplayName": "Duplex 5 Enchanted Book"
+	},
+	{
+		"description": "enchanted book",
+		"internalName": "PROTECTION;6",
+		"expectedDisplayName": "Protection 6 Enchanted Book"
+	},
+	{
+		"description": "attribute shard",
+		"internalName": "ATTRIBUTE_SHARD_MANA_REGENERATION;4",
+		"expectedDisplayName": "Mana Regeneration 4 Attribute Shard"
+	},
+	{
+		"description": "pet skill xp boost",
+		"internalName": "PET_ITEM_FISHING_SKILL_BOOST_EPIC",
+		"expectedDisplayName": "Epic Fishing Exp Boost"
+	}
+]

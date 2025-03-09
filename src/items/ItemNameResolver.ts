@@ -43,7 +43,7 @@ export class ItemNameResolver {
 
 		let itemName = irregularItemNames[itemData.internalname]
 		if (itemName) return itemName
-		
+
 		// handle skill exp boost pet items
 		const petItemMatcher = /PET_ITEM_(\w+)_SKILL_BOOST_(\w+)/.exec(itemData.internalname)
 		if (petItemMatcher) {
@@ -87,5 +87,5 @@ export type ItemName = {
 }
 
 const irregularItemNames: Record<string, string | undefined> = {
-    "GOD_POTION": "God Potion (Legacy)"
+	GOD_POTION: "God Potion (Legacy)"
 }

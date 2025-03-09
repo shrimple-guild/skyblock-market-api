@@ -71,7 +71,7 @@ export class BazaarService {
 			buyMarketValue: product.getSellPrice(),
 			current: {
 				instaBuy: product.getInstabuyPrice(),
-				instaSell: product.getInstasellPrice(),
+				instaSell: product.getInstasellPrice()
 			},
 			oneDayAverage,
 			oneWeekAverage
