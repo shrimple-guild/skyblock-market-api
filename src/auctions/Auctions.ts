@@ -17,15 +17,22 @@ async function fetchBins(): Promise<{ timestamp: number; bins: Bin[] }> {
 		throw new Error("Some pages had different timestamps.")
 	}
 
-	const bins = pages
-		.flatMap((page) => page.auctions)
-		.filter((auction) => auction.bin)
-		.map((auction) => ({
-			internalName: InternalName.resolveFromBytes(auction.item_bytes),
-			lowestBin: auction.starting_bid
-		}))
+	const lowestBinMap = new Map<string, number>()
 
-	return { timestamp: firstPage.lastUpdated, bins }
+	for (const page of pages) {
+		for (const auction of page.auctions) {
+			if (!auction.bin) continue
+			const internalName = InternalName.resolveFromBytes(auction.item_bytes)
+			const currentLowestBin = lowestBinMap.get(internalName) ?? Infinity
+			lowestBinMap.set(internalName, Math.min(auction.starting_bid, currentLowestBin))
+		}
+	}
+
+	const lowestBins: Bin[] = Array.from(lowestBinMap.entries(), (entry) => (
+		{ internalName: entry[0], lowestBin: entry[1] }
+	))
+
+	return { timestamp: firstPage.lastUpdated, bins: lowestBins }
 }
 
 async function fetchPageAuctions(page: number): Promise<ApiSkyblockAuctionJson> {

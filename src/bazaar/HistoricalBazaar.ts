@@ -8,7 +8,7 @@ export class HistoricalBazaar {
 		this.db = new Database(path, { create: true, strict: true })
 
 		this.db.exec(`
-            CREATE TABLE IF NOT EXISTS bazaar (
+            CREATE TABLE IF NOT EXISTS bazaar_ts (
                 timestamp INTEGER NOT NULL,
                 internalName TEXT NOT NULL,
                 instaBuy REAL,
@@ -19,7 +19,7 @@ export class HistoricalBazaar {
 	}
 
 	deleteOldProducts(before: number): void {
-		this.db.query("DELETE FROM bazaar WHERE timestamp < ?").run(Math.floor(before / 1000))
+		this.db.query("DELETE FROM bazaar_ts WHERE timestamp < ?").run(Math.floor(before / 1000))
 	}
 
 	insertProducts(bazaar: Bazaar): void {
@@ -37,14 +37,14 @@ export class HistoricalBazaar {
 
 	insertProduct(time: number, internalName: string, instaBuy: number | null, instaSell: number | null): void {
 		this.db
-			.query("INSERT OR IGNORE INTO bazaar (timestamp, internalName, instaBuy, instaSell) VALUES (?, ?, ?, ?)")
+			.query("INSERT OR IGNORE INTO bazaar_ts (timestamp, internalName, instaBuy, instaSell) VALUES (?, ?, ?, ?)")
 			.run(Math.floor(time / 1000), internalName, instaBuy, instaSell)
 	}
 
 	getAveragePrice(internalName: string, time: number, window: number) {
 		const stmt = `
             SELECT AVG(instaBuy) AS avgInstaBuy, AVG(instaSell) AS avgInstaSell
-            FROM bazaar
+            FROM bazaar_ts
             WHERE internalName = $internalName
             AND $current - timestamp <= $window
         `
