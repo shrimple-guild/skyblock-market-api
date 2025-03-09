@@ -1,6 +1,7 @@
 import fuzzysort from "fuzzysort"
 import type { ItemName, ItemNameResolver } from "../items/ItemNameResolver"
 import { AuctionData } from "./AuctionData"
+import { MillisecondDurations } from "../constants"
 
 export class AuctionService {
 	private auctionData: AuctionData
@@ -15,8 +16,8 @@ export class AuctionService {
 		this.itemNames = newItemNames
 	}
 
-	deleteOldAuctionData() {
-		this.auctionData.deleteOldAuctions(Date.now() - 30 * 24 * 60 * 60 * 1000)
+	deleteOldAuctionData(maxAge: number) {
+		this.auctionData.deleteOldAuctions(Date.now() - maxAge)
 	}
 
 	searchForItem(query: string): ItemName | null {
@@ -29,7 +30,7 @@ export class AuctionService {
 
 	getItemData(name: ItemName) {
 		const data = this.auctionData.getLatestAuction(name.internalName)
-		const oneWeekAverage = this.auctionData.getAveragePrice(name.internalName, Date.now(), 24 * 60 * 60 * 1000)
+		const oneWeekAverage = this.auctionData.getAveragePrice(name.internalName, Date.now(), MillisecondDurations.ONE_WEEK)
 		if (!data) return null
 		return {
 			name: name.displayName,

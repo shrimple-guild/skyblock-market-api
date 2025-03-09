@@ -6,7 +6,7 @@ export type Bin = {
 	lowestBin: number
 }
 
-const AUCTION_URL = "https://api.hypixel.net/skyblock/auctions"
+const AUCTION_URL = "https://api.hypixel.net/v2/skyblock/auctions"
 
 async function fetchBins(): Promise<{ timestamp: number; bins: Bin[] }> {
 	const firstPage = await fetchPageAuctions(0)

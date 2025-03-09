@@ -4,9 +4,10 @@ import type { ApiSkyblockBazaarJson } from "../types/ApiSkyblockBazaarJson"
 import { Bazaar } from "./Bazaar"
 import { HistoricalBazaar } from "./HistoricalBazaar"
 import { TextUtils } from "../TextUtils"
+import { MillisecondDurations } from "../constants"
 
 export class BazaarService {
-	private static URL = "https://api.hypixel.net/skyblock/bazaar"
+	private static URL = "https://api.hypixel.net/v2/skyblock/bazaar"
 	private bazaar: Bazaar
 	private historical: HistoricalBazaar
 	private itemNames: ItemNameResolver
@@ -37,8 +38,8 @@ export class BazaarService {
 		this.historical.insertProducts(this.bazaar)
 	}
 
-	deleteOldProductData() {
-		this.historical.deleteOldProducts(Date.now() - 30 * 24 * 60 * 60 * 1000)
+	deleteOldProductData(maxAge: number) {
+		this.historical.deleteOldProducts(Date.now() - maxAge)
 	}
 
 	searchForProduct(query: string): ItemName | null {
@@ -62,8 +63,8 @@ export class BazaarService {
 
 	getProductData(name: ItemName) {
 		const product = this.bazaar.getProduct(name.internalName)
-		const oneDayAverage = this.historical.getAveragePrice(name.internalName, Date.now(), 24 * 60 * 60 * 1000)
-		const oneWeekAverage = this.historical.getAveragePrice(name.internalName, Date.now(), 7 * 24 * 60 * 60 * 1000)
+		const oneDayAverage = this.historical.getAveragePrice(name.internalName, Date.now(), MillisecondDurations.ONE_DAY)
+		const oneWeekAverage = this.historical.getAveragePrice(name.internalName, Date.now(), MillisecondDurations.ONE_WEEK)
 		return {
 			name: name.displayName,
 			internalName: name.internalName,

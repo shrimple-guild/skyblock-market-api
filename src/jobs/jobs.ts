@@ -2,6 +2,7 @@ import cron from "node-cron"
 import { auctionService, bazaarService, neuItemService } from "../services"
 import type { WorkerMessage } from "../types/WorkerMessage"
 import { logCategories } from "../logger"
+import { MillisecondDurations } from "../constants"
 
 const logger = logCategories.getLogger("jobs")
 
@@ -31,11 +32,11 @@ schedule("update bazaar products", "*/20 * * * * *", async () => {
 })
 
 schedule("clean up auctions", "0 0 0 * * *", () => {
-	auctionService.deleteOldAuctionData()
+	auctionService.deleteOldAuctionData(MillisecondDurations.ONE_MONTH)
 })
 
 schedule("clean up bazaar products", "0 0 6 * * *", () => {
-	bazaarService.deleteOldProductData()
+	bazaarService.deleteOldProductData(MillisecondDurations.ONE_MONTH)
 })
 
 const worker = new Worker("./src/jobs/auction-worker.ts")
