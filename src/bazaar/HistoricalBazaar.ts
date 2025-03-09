@@ -41,7 +41,7 @@ export class HistoricalBazaar {
 			.run(Math.floor(time / 1000), internalName, instaBuy, instaSell)
 	}
 
-	getAveragePrice(internalName: string, time: number, window: number): AverageResult {
+	getAveragePrice(internalName: string, time: number, window: number) {
 		const stmt = `
             SELECT AVG(instaBuy) AS avgInstaBuy, AVG(instaSell) AS avgInstaSell
             FROM bazaar
@@ -54,8 +54,8 @@ export class HistoricalBazaar {
 			window: Math.floor(window / 1000)
 		})
 		return {
-			avgInstaBuy: result?.avgInstaBuy ?? 0,
-			avgInstaSell: result?.avgInstaSell ?? 0
+			instaBuy: result?.avgInstaBuy ?? 0,
+			instaSell: result?.avgInstaSell ?? 0
 		}
 	}
 }

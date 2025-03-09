@@ -29,7 +29,7 @@ export class AuctionService {
 
 	getItemData(name: ItemName) {
 		const data = this.auctionData.getLatestAuction(name.internalName)
-		const oneWeekAverage = this.auctionData.getAveragePrice(name.internalName, Date.now(), 24 * 60 * 60 * 100)
+		const oneWeekAverage = this.auctionData.getAveragePrice(name.internalName, Date.now(), 24 * 60 * 60 * 1000)
 		if (!data) return null
 		return {
 			name: name.displayName,

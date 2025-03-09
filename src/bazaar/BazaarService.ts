@@ -62,16 +62,19 @@ export class BazaarService {
 
 	getProductData(name: ItemName) {
 		const product = this.bazaar.getProduct(name.internalName)
-		const oneDayAverage = this.historical.getAveragePrice(name.internalName, Date.now(), 24 * 60 * 60 * 100)
+		const oneDayAverage = this.historical.getAveragePrice(name.internalName, Date.now(), 24 * 60 * 60 * 1000)
+		const oneWeekAverage = this.historical.getAveragePrice(name.internalName, Date.now(), 7 * 24 * 60 * 60 * 1000)
 		return {
 			name: name.displayName,
 			internalName: name.internalName,
-			instaBuy: product.getInstabuyPrice(),
-			instaSell: product.getInstasellPrice(),
 			sellMarketValue: product.getBuyPrice(),
 			buyMarketValue: product.getSellPrice(),
-			instaBuyAvg1Day: oneDayAverage.avgInstaBuy,
-			instaSellAvg1Day: oneDayAverage.avgInstaSell
+			current: {
+				instaBuy: product.getInstabuyPrice(),
+				instaSell: product.getInstasellPrice(),
+			},
+			oneDayAverage,
+			oneWeekAverage
 		}
 	}
 }
