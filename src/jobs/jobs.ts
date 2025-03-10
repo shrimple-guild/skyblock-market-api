@@ -35,7 +35,7 @@ schedule("clean up bazaar products", "0 0 6 * * *", () => {
 	bazaarService.deleteOldProductData(MillisecondDurations.ONE_MONTH)
 })
 
-schedule("update bazaar products", "* * * * * *", async () => {
+schedule("update bazaar products", "0 * * * * *", async () => {
 	await bazaarService.update()
 })
 
