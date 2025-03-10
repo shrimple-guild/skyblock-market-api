@@ -43,5 +43,60 @@
 		"description": "pet skill xp boost",
 		"internalName": "PET_ITEM_FISHING_SKILL_BOOST_EPIC",
 		"expectedDisplayName": "Epic Fishing Exp Boost"
+	},
+	{
+		"description": "mathematical hoe",
+		"internalName": "THEORETICAL_HOE_CANE_3",
+		"expectedDisplayName": "Turing Sugar Cane Hoe (T3)"
+	},
+	{
+		"description": "beastmaster crest",
+		"internalName": "BEASTMASTER_CREST_COMMON",
+		"expectedDisplayName": "Common Beastmaster Crest"
+	},
+	{
+		"description": "enchanted book bundle",
+		"internalName": "ENCHANTED_BOOK_BUNDLE_VICIOUS",
+		"expectedDisplayName": "Vicious 3 Enchanted Book Bundle"
+	},
+	{
+		"description": "baby skin",
+		"internalName": "GOBLIN_HELMET_BABY",
+		"expectedDisplayName": "Goblin Helmet Baby Skin"
+	},
+	{
+		"description": "dragon baby skin",
+		"internalName": "HOLY_BABY",
+		"expectedDisplayName": "Holy Dragon Helmet Baby Skin"
+	},
+	{
+		"description": "not a baby skin",
+		"internalName": "WATER_HYDRA_BABY",
+		"expectedDisplayName": "Baby Hydra Skin"
+	},
+	{
+		"description": "shimmer skin",
+		"internalName": "HOLY_SHIMMER",
+		"expectedDisplayName": "Holy Dragon Helmet Shimmer Skin"
+	},
+	{
+		"description": "griffin upgrade stone",
+		"internalName": "GRIFFIN_UPGRADE_STONE_EPIC",
+		"expectedDisplayName": "Epic Griffin Upgrade Stone"
+	},
+	{
+		"description": "wisp upgrade stone",
+		"internalName": "UPGRADE_STONE_SUBZERO",
+		"expectedDisplayName": "Subzero Wisp Upgrade Stone"
+	},
+	{
+		"description": "abiphone without color",
+		"internalName": "ABIPHONE_XIV_ENORMOUS",
+		"expectedDisplayName": "Abiphone XIV Enormous"
+	},
+	{
+		"description": "abiphone with color",
+		"internalName": "ABIPHONE_XIV_ENORMOUS_BLACK",
+		"expectedDisplayName": "Abiphone XIV Enormous (Black)"
 	}
 ]

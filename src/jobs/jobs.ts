@@ -20,12 +20,25 @@ function schedule(name: string, expression: string, task: () => Promise<string> 
 	})
 }
 
-schedule("update item names", "0 0 12 * * *", async () => {
+async function updateItemNames() {
 	await neuItemService.load()
 	const resolver = neuItemService.getItemResolver()
 	bazaarService.updateItemNames(resolver)
 	auctionService.updateItemNames(resolver)
-})
+
+	const duplicates = resolver.checkForDuplicateDisplayNames()
+
+	const warnings: string[] = []
+	for (const [name, internalNames] of duplicates) {
+		if (internalNames.length < 2) continue
+		warnings.push(`Duplicate internal names found for display name ${name}: ${internalNames.join(", ")}`)
+	}
+	if (warnings.length > 0) {
+		// logger.warn(warnings.join("\n"))
+	}
+}
+
+schedule("update item names", "0 0 12 * * *", () => updateItemNames())
 
 schedule("clean up old auction items", "15 0 0 * * *", () => {
 	auctionService.deleteOldAuctionData(MillisecondDurations.ONE_MONTH)
@@ -56,3 +69,5 @@ schedule("update auctions", "30 * * * * *", async () => {
 	})
 	return promise
 })
+
+export const Jobs = { updateItemNames }

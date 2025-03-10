@@ -1,5 +1,5 @@
 import fuzzysort from "fuzzysort"
-import type { ItemName, ItemNameResolver } from "../items/ItemNameResolver"
+import { ItemNameResolver, type ItemName } from "../items/ItemNameResolver"
 import type { ApiSkyblockBazaarJson } from "../types/ApiSkyblockBazaarJson"
 import { Bazaar } from "./Bazaar"
 import { HistoricalBazaar } from "./HistoricalBazaar"
@@ -12,14 +12,14 @@ export class BazaarService {
 	private historical: HistoricalBazaar
 	private itemNames: ItemNameResolver
 
-	static async init(itemNames: ItemNameResolver, path?: string) {
+	static async init(path?: string) {
 		const bazaar = await BazaarService.fetchBazaar()
-		return new BazaarService(bazaar, itemNames, path)
+		return new BazaarService(bazaar, path)
 	}
 
-	private constructor(bazaar: Bazaar, itemNames: ItemNameResolver, path?: string) {
+	private constructor(bazaar: Bazaar, path?: string) {
 		this.bazaar = bazaar
-		this.itemNames = itemNames
+		this.itemNames = ItemNameResolver.EMPTY
 		this.historical = new HistoricalBazaar(path)
 	}
 
