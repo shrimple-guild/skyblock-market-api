@@ -61,40 +61,7 @@ export class ItemNameResolver {
 		if (itemData.internalname.startsWith("STARRED_")) {
 			return `Starred ${cleaned}`
 		}
-
-		// handle items with rarity suffix
-		const beastmasterMatcher = /(BEASTMASTER_CREST|GRIFFIN_UPGRADE_STONE)_(\w+)/.exec(itemData.internalname)
-		if (beastmasterMatcher) {
-			const rarity = TextUtils.toTitleCase(beastmasterMatcher[2])
-			return `${rarity} ${cleaned}`
-		}
-
-		// handle baby skins
-		const babyMatcher = /(\w+?)(_HELMET)?_BABY/.exec(itemData.internalname)
-		if (cleaned == "Baby Skin" && babyMatcher) {
-			const suffix = babyMatcher[2] ? "" : "Dragon "
-			return TextUtils.toTitleCase(`${babyMatcher[1]} ${suffix}Helmet Baby Skin`)
-		}
-
-		// handle abiphones
-		const abiphoneMatcher = /ABIPHONE_XIV_ENORMOUS(?:_(\w+))?/.exec(itemData.internalname)
-		if (abiphoneMatcher) {
-			const suffix = abiphoneMatcher[1] ? ` (${TextUtils.toTitleCase(abiphoneMatcher[1])})` : ""
-			return `${cleaned}${suffix}`
-		}
-
-		// handle shimmer skins
-		const shimmerMatcher = /(\w+)_SHIMMER/.exec(itemData.internalname)
-		if (shimmerMatcher) {
-			return TextUtils.toTitleCase(`${shimmerMatcher[1]} Dragon Helmet Shimmer Skin`)
-		}
-
-		// handle wisp upgrade stones
-		const wispMatcher = /UPGRADE_STONE_(\w+)/.exec(itemData.internalname)
-		if (wispMatcher) {
-			return TextUtils.toTitleCase(`${wispMatcher[1]} Wisp Upgrade Stone`)
-		}
-
+	
 		// handle mathematical hoes
 		const hoeMatcher = /THEORETICAL_HOE_\w+_(\d)/.exec(itemData.internalname)
 		if (hoeMatcher) {
@@ -156,4 +123,36 @@ const irregularItemNames: Record<string, string | undefined> = {
 	"SALMON_CHESTPLATE": "Salmon Chestplate (Legacy)",
 	"SALMON_LEGGINGS": "Salmon Leggings (Legacy)",
 	"SALMON_BOOTS": "Salmon Boots (Legacy)",
+	"SUPERIOR_BABY": "Superior Dragon Helmet Baby Skin",
+	"STRONG_BABY": "Strong Dragon Helmet Baby Skin",
+	"UNSTABLE_BABY": "Unstable Dragon Helmet Baby Skin",
+	"YOUNG_BABY": "Young Dragon Helmet Baby Skin",
+	"OLD_BABY": "Old Dragon Helmet Baby Skin",
+	"WISE_BABY": "Wise Dragon Helmet Baby Skin",
+	"PROTECTOR_BABY": "Protector Dragon Helmet Baby Skin",
+	"HOLY_BABY": "Holy Dragon Helmet Baby Skin",
+	"GOBLIN_HELMET_BABY": "Goblin Helmet Baby Skin",
+	"SUPERIOR_SHIMMER": "Superior Dragon Helmet Shimmer Skin",
+	"STRONG_SHIMMER": "Strong Dragon Helmet Shimmer Skin",
+	"UNSTABLE_SHIMMER": "Unstable Dragon Helmet Shimmer Skin",
+	"YOUNG_SHIMMER": "Young Dragon Helmet Shimmer Skin",
+	"OLD_SHIMMER": "Old Dragon Helmet Shimmer Skin",
+	"WISE_SHIMMER": "Wise Dragon Helmet Shimmer Skin",
+	"PROTECTOR_SHIMMER": "Protector Dragon Helmet Shimmer Skin",
+	"HOLY_SHIMMER": "Holy Dragon Helmet Shimmer Skin",
+	"ABIPHONE_XIV_ENORMOUS": "Abiphone 14 Enormous",
+	"ABIPHONE_XIV_ENORMOUS_BLACK": "Abiphone 14 Enormous (Black)",
+	"ABIPHONE_XIV_ENORMOUS_PURPLE": "Abiphone 14 Enormous (Purple)",
+	"UPGRADE_STONE_FROST": "Frost Wisp Upgrade Stone",
+	"UPGRADE_STONE_GLACIAL": "Glacial Wisp Upgrade Stone",
+	"UPGRADE_STONE_SUBZERO": "Subzero Wisp Upgrade Stone",
+	"GRIFFIN_UPGRADE_STONE_UNCOMMON": "Uncommon Griffin Upgrade Stone",
+	"GRIFFIN_UPGRADE_STONE_RARE": "Rare Griffin Upgrade Stone",
+	"GRIFFIN_UPGRADE_STONE_EPIC": "Epic Griffin Upgrade Stone",
+	"GRIFFIN_UPGRADE_STONE_LEGENDARY": "Legendary Griffin Upgrade Stone",
+	"BEASTMASTER_CREST_COMMON": "Common Beastmaster Crest",
+	"BEASTMASTER_CREST_UNCOMMON": "Uncommon Beastmaster Crest",
+	"BEASTMASTER_CREST_RARE": "Rare Beastmaster Crest",
+	"BEASTMASTER_CREST_EPIC": "Epic Beastmaster Crest",
+	"BEASTMASTER_CREST_LEGENDARY": "Legendary Beastmaster Crest"
 }
