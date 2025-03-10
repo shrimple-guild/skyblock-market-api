@@ -25,7 +25,7 @@ describe("AuctionData", () => {
 		expect(auctionData.getInternalNames()).toContain("test_item_a")
 	})
 
-	it("should insert and retrieve the latest auction", () => {
+	it("should retrieve the latest auction", () => {
 		const latest = auctionData.getLatestAuction("test_item_1")
 		expect(latest).not.toBeNull()
 		expect(latest?.lowestBin).toBe(200)

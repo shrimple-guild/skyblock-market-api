@@ -8,12 +8,18 @@ export class AuctionData {
 		this.db = new Database(path, { create: true, strict: true })
 
 		this.db.exec(`
-            CREATE TABLE IF NOT EXISTS auction_ts (
-                timestamp INTEGER NOT NULL,
-                internalName TEXT NOT NULL,
-                lowestBin INTEGER NOT NULL,
-                UNIQUE(timestamp, internalName)
-            )
+            CREATE TABLE IF NOT EXISTS auction_items (
+				id INTEGER PRIMARY KEY,
+				internal_name TEXT UNIQUE NOT NULL
+			);
+
+			CREATE TABLE IF NOT EXISTS auction_ts (
+				item_id INTEGER NOT NULL,
+				timestamp INTEGER NOT NULL,
+				lowest_bin INTEGER NOT NULL,
+				PRIMARY KEY(item_id, timestamp),
+				FOREIGN KEY(item_id) REFERENCES auction_items(id)
+			);
         `)
 	}
 
@@ -30,28 +36,43 @@ export class AuctionData {
 	}
 
 	insertBin(time: number, internalName: string, lowestBin: number): void {
-		this.db
-			.query("INSERT OR IGNORE INTO auction_ts (timestamp, internalName, lowestBin) VALUES (?, ?, ?)")
-			.run(Math.floor(time / 1000), internalName, lowestBin)
+		this.db.transaction(() => {
+			this.db
+				.query("INSERT OR IGNORE INTO auction_items (internal_name) VALUES (?)")
+				.run(internalName)
+
+			this.db
+				.query(`
+					INSERT OR IGNORE INTO auction_ts (item_id, timestamp, lowest_bin) 
+					SELECT auction_items.id, ?1, ?3
+					FROM auction_items
+					WHERE internal_name = ?2`
+				)
+				.run(Math.floor(time / 1000), internalName, lowestBin)
+		})()
 	}
 
 	getInternalNames(): string[] {
 		return this.db
-			.prepare<{ internalName: string }, []>("SELECT DISTINCT internalName FROM auction_ts")
+			.prepare<{ internal_name: string }, []>("SELECT internal_name FROM auction_items")
 			.all()
-			.map((row) => row.internalName)
+			.map((row) => row.internal_name)
 	}
 
 	getLatestAuction(internalName: string): CurrentLowestBinResult | null {
 		const stmt = `
-            SELECT timestamp, lowestBin, (SELECT MAX(timestamp) FROM auction_ts) AS latestTimestamp
-            FROM auction_ts 
-            WHERE internalName = $internalName
-            AND timestamp = (SELECT MAX(timestamp) FROM auction_ts WHERE internalName = $internalName)
+            SELECT 
+				timestamp, 
+				lowest_bin AS lowestBin, 
+				(SELECT MAX(timestamp) FROM auction_ts) AS latestTimestamp
+			FROM auction_ts
+			WHERE item_id = (SELECT id FROM auction_items WHERE internal_name = ?)
+			ORDER BY timestamp DESC
+			LIMIT 1;
         `
 		const result = this.db
-			.query<CurrentLowestBinResult, { internalName: string }>(stmt)
-			.get({ internalName: internalName })
+			.query<CurrentLowestBinResult, string>(stmt)
+			.get(internalName)
 
 		if (result == null) return null
 		result.latestTimestamp *= 1000
@@ -61,9 +82,9 @@ export class AuctionData {
 
 	getAveragePrice(internalName: string, time: number, window: number): number | null {
 		const stmt = `
-            SELECT AVG(lowestBin) AS averageLowestBin
+            SELECT AVG(lowest_bin) AS averageLowestBin
             FROM auction_ts
-            WHERE internalName = $internalName
+            WHERE item_id = (SELECT id FROM auction_items WHERE internal_name = $internalName)
             AND $current - timestamp <= $window
         `
 		return (
