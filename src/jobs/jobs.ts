@@ -27,12 +27,12 @@ schedule("update item names", "0 0 12 * * *", async () => {
 	auctionService.updateItemNames(resolver)
 })
 
-schedule("clean up auctions", "0 0 0 * * *", () => {
+schedule("clean up old auction items", "15 0 0 * * *", () => {
 	auctionService.deleteOldAuctionData(MillisecondDurations.ONE_MONTH)
 })
 
-schedule("clean up bazaar products", "0 0 6 * * *", () => {
-	bazaarService.deleteOldProductData(MillisecondDurations.ONE_MONTH)
+schedule("clean up bazaar products", "15 0 6 * * *", () => {
+	bazaarService.deleteOldProductData(MillisecondDurations.ONE_WEEK)
 })
 
 schedule("update bazaar products", "0 * * * * *", async () => {
