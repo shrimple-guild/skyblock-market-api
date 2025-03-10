@@ -8,9 +8,9 @@ beforeEach(() => {
 	auctionData = new AuctionData()
 	auctionData.insertBin(now - 60000, "test_item_1", 100)
 	auctionData.insertBin(now - 30000, "test_item_1", 150)
+	auctionData.insertBin(now - 20000, "irrelevant", 1500)
 	auctionData.insertBin(now - 10000, "test_item_1", 200)
 	auctionData.insertBin(now, "irrelevant", 1000)
-	auctionData.insertBin(now - 20000, "irrelevant", 1500)
 })
 
 describe("AuctionData", () => {
@@ -26,7 +26,7 @@ describe("AuctionData", () => {
 	})
 
 	it("should retrieve the latest auction", () => {
-		const latest = auctionData.getLatestAuction("test_item_1")
+		const latest = auctionData.getLowestBin("test_item_1")
 		expect(latest).not.toBeNull()
 		expect(latest?.lowestBin).toBe(200)
 		expect(latest?.timestamp).toBe(now - 10000)
@@ -34,24 +34,8 @@ describe("AuctionData", () => {
 	})
 
 	it("should return null for non-existent items", () => {
-		const latest = auctionData.getLatestAuction("not_an_item")
+		const latest = auctionData.getLowestBin("not_an_item")
 		expect(latest).toBeNull()
-	})
-
-	it("should calculate the correct average price in full time window", () => {
-		const average = auctionData.getAveragePrice("test_item_1", now, 60000)
-		expect(average).not.toBeNull()
-		expect(average).toBeCloseTo(150)
-	})
-
-	it("should calculate the correct average price in the given time window", () => {
-		const average = auctionData.getAveragePrice("test_item_1", now, 30000)
-		expect(average).toBeCloseTo(175)
-	})
-
-	it("should return null average price if none in window", () => {
-		const average = auctionData.getAveragePrice("test_item_1", now, 5000)
-		expect(average).toBeNull()
 	})
 
 	it("should get all internal names", () => {

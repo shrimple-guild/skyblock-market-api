@@ -1,7 +1,6 @@
 import fuzzysort from "fuzzysort"
 import type { ItemName, ItemNameResolver } from "../items/ItemNameResolver"
 import { AuctionData } from "./AuctionData"
-import { MillisecondDurations } from "../constants"
 
 export class AuctionService {
 	private auctionData: AuctionData
@@ -29,16 +28,14 @@ export class AuctionService {
 	}
 
 	getItemData(name: ItemName) {
-		const data = this.auctionData.getLatestAuction(name.internalName)
-		const oneWeekAverage = this.auctionData.getAveragePrice(name.internalName, Date.now(), MillisecondDurations.ONE_WEEK)
+		const data = this.auctionData.getLowestBin(name.internalName)
 		if (!data) return null
 		return {
 			name: name.displayName,
 			internalName: name.internalName,
 			seenAt: new Date(data.timestamp),
 			current: data.timestamp == data.latestTimestamp,
-			lowestBin: data.lowestBin,
-			oneWeekLowestBin: oneWeekAverage
+			lowestBin: data.lowestBin
 		}
 	}
 }

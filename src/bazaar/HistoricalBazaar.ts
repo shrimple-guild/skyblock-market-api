@@ -46,12 +46,11 @@ export class HistoricalBazaar {
 
 	insertProduct(time: number, internalName: string, instaBuy: number | null, instaSell: number | null): void {
 		this.db.transaction(() => {
-			this.db
-				.query("INSERT OR IGNORE INTO bazaar_items (internal_name) VALUES (?)")
-				.run(internalName)
+			this.db.query("INSERT OR IGNORE INTO bazaar_items (internal_name) VALUES (?)").run(internalName)
 
 			this.db
-				.query(`
+				.query(
+					`
 					INSERT OR IGNORE INTO bazaar_ts (item_id, timestamp, insta_buy, insta_sell) 
 					SELECT bazaar_items.id, ?1, ?3, ?4
 					FROM bazaar_items

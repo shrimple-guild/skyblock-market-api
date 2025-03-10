@@ -28,9 +28,10 @@ async function fetchBins(): Promise<{ timestamp: number; bins: Bin[] }> {
 		}
 	}
 
-	const lowestBins: Bin[] = Array.from(lowestBinMap.entries(), (entry) => (
-		{ internalName: entry[0], lowestBin: entry[1] }
-	))
+	const lowestBins: Bin[] = Array.from(lowestBinMap.entries(), (entry) => ({
+		internalName: entry[0],
+		lowestBin: entry[1]
+	}))
 
 	return { timestamp: firstPage.lastUpdated, bins: lowestBins }
 }

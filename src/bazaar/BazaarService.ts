@@ -63,8 +63,16 @@ export class BazaarService {
 
 	getProductData(name: ItemName) {
 		const product = this.bazaar.getProduct(name.internalName)
-		const oneDayAverage = this.historical.getAveragePrice(name.internalName, Date.now(), MillisecondDurations.ONE_DAY)
-		const oneWeekAverage = this.historical.getAveragePrice(name.internalName, Date.now(), MillisecondDurations.ONE_WEEK)
+		const oneDayAverage = this.historical.getAveragePrice(
+			name.internalName,
+			Date.now(),
+			MillisecondDurations.ONE_DAY
+		)
+		const oneWeekAverage = this.historical.getAveragePrice(
+			name.internalName,
+			Date.now(),
+			MillisecondDurations.ONE_WEEK
+		)
 		return {
 			name: name.displayName,
 			internalName: name.internalName,
