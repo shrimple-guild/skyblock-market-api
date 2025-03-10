@@ -27,16 +27,16 @@ schedule("update item names", "0 0 12 * * *", async () => {
 	auctionService.updateItemNames(resolver)
 })
 
-schedule("update bazaar products", "*/20 * * * * *", async () => {
-	await bazaarService.update()
-})
-
 schedule("clean up auctions", "0 0 0 * * *", () => {
 	auctionService.deleteOldAuctionData(MillisecondDurations.ONE_MONTH)
 })
 
 schedule("clean up bazaar products", "0 0 6 * * *", () => {
 	bazaarService.deleteOldProductData(MillisecondDurations.ONE_MONTH)
+})
+
+schedule("update bazaar products", "* * * * * *", async () => {
+	await bazaarService.update()
 })
 
 const worker = new Worker("./src/jobs/auction-worker.ts")
