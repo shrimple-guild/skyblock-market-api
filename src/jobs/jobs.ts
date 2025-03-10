@@ -29,11 +29,14 @@ async function updateItemNames() {
 	const duplicates = resolver.checkForDuplicateDisplayNames()
 
 	const warnings: string[] = []
+	let internalNameDuplicateCount = 0
 	for (const [name, internalNames] of duplicates) {
 		if (internalNames.length < 2) continue
+		internalNameDuplicateCount += internalNames.length
 		warnings.push(`Duplicate internal names found for display name ${name}: ${internalNames.join(", ")}`)
 	}
 	if (warnings.length > 0) {
+		logger.warn(`Found ${warnings.length} duplicate display names (${internalNameDuplicateCount} internal names).`)
 		// logger.warn(warnings.join("\n"))
 	}
 }
