@@ -56,6 +56,6 @@ describe("AuctionData", () => {
 
 	it("should get all internal names", () => {
 		const names = auctionData.getInternalNames()
-		expect(names).toEqual(["test_item_1", "irrelevant"])
+		expect(names.sort()).toEqual(["test_item_1", "irrelevant"].sort())
 	})
 })

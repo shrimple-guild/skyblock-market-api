@@ -10,7 +10,8 @@ export class AuctionData {
 		this.db.exec(`
             CREATE TABLE IF NOT EXISTS auction_items (
 				id INTEGER PRIMARY KEY,
-				internal_name TEXT UNIQUE NOT NULL
+				internal_name TEXT UNIQUE NOT NULL,
+				last_seen INTEGER NOT NULL
 			);
 
 			CREATE TABLE IF NOT EXISTS auction_ts (
@@ -38,8 +39,10 @@ export class AuctionData {
 	insertBin(time: number, internalName: string, lowestBin: number): void {
 		this.db.transaction(() => {
 			this.db
-				.query("INSERT OR IGNORE INTO auction_items (internal_name) VALUES (?)")
-				.run(internalName)
+				.query(`
+					INSERT INTO auction_items (internal_name, last_seen) VALUES (?, ?)
+					ON CONFLICT (internal_name) DO UPDATE SET last_seen = excluded.last_seen`)
+				.run(internalName, time)
 
 			this.db
 				.query(`
