@@ -57,7 +57,7 @@ export class BazaarProduct {
 		}
 		return {
 			quantity: startingAmount - amount,
-			price: money
+			value: money
 		}
 	}
 }

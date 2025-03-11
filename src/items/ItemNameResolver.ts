@@ -40,7 +40,7 @@ export class ItemNameResolver {
 				const level = item.internalName == "GOLDEN_DRAGON;4" ? 200 : 100
 				return {
 					internalName: internalName,
-					displayName: `[Lvl ${level}] ${item.displayName}`
+					displayName: `Level ${level} ${item.displayName}`
 				}
 			}
 			return item

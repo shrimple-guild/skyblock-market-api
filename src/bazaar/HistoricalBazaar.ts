@@ -73,8 +73,8 @@ export class HistoricalBazaar {
 			window: Math.floor(window / 1000)
 		})
 		return {
-			instaBuy: result?.avgInstaBuy ?? 0,
-			instaSell: result?.avgInstaSell ?? 0
+			instaBuy: result?.avgInstaBuy ?? null,
+			instaSell: result?.avgInstaSell ?? null
 		}
 	}
 }
@@ -86,8 +86,8 @@ type BazaarProduct = {
 }
 
 type AverageResult = {
-	avgInstaBuy: number
-	avgInstaSell: number
+	avgInstaBuy: number | null
+	avgInstaSell: number | null
 }
 
 type AveragePriceQuery = {
