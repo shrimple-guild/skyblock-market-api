@@ -7,12 +7,12 @@
 	{
 		"description": "pet (maxed)",
 		"internalName": "ENDER_DRAGON;4+MAX",
-		"expectedDisplayName": "[Lvl 100] Legendary Ender Dragon"
+		"expectedDisplayName": "Level 100 Legendary Ender Dragon"
 	},
 	{
 		"description": "golden dragon (maxed)",
 		"internalName": "GOLDEN_DRAGON;4+MAX",
-		"expectedDisplayName": "[Lvl 200] Legendary Golden Dragon"
+		"expectedDisplayName": "Level 200 Legendary Golden Dragon"
 	},
 	{
 		"description": "god pot (legacy)",
@@ -92,11 +92,11 @@
 	{
 		"description": "abiphone without color",
 		"internalName": "ABIPHONE_XIV_ENORMOUS",
-		"expectedDisplayName": "Abiphone XIV Enormous"
+		"expectedDisplayName": "Abiphone 14 Enormous"
 	},
 	{
 		"description": "abiphone with color",
 		"internalName": "ABIPHONE_XIV_ENORMOUS_BLACK",
-		"expectedDisplayName": "Abiphone XIV Enormous (Black)"
+		"expectedDisplayName": "Abiphone 14 Enormous (Black)"
 	}
 ]

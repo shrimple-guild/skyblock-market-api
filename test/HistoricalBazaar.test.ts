@@ -28,7 +28,7 @@ describe("HistoricalBazaar", () => {
 
 	it("should get no prices if window too small", () => {
 		const data = historicalBazaar.getAveragePrice("product_1", now, 5000)
-		expect(data.instaBuy).toBe(0)
-		expect(data.instaSell).toBe(0)
+		expect(data.instaBuy).toBe(null)
+		expect(data.instaSell).toBe(null)
 	})
 })
