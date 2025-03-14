@@ -1,15 +1,18 @@
+import { TextUtils } from "../TextUtils"
 import type { ApiSkyblockBazaarJson } from "../types/ApiSkyblockBazaarJson"
 import { BazaarProduct } from "./BazaarProduct"
 
 export class Bazaar {
 	private raw: ApiSkyblockBazaarJson
 	private products: Map<string, BazaarProduct>
+	private names?: string[]
 
 	constructor(raw: ApiSkyblockBazaarJson) {
 		this.raw = raw
 		this.products = new Map()
 		for (const rawProduct of Object.values(this.raw.products)) {
 			const product = new BazaarProduct(rawProduct)
+			if (!product.hasOrders()) continue
 			this.products.set(product.getInternalName(), product)
 		}
 	}
@@ -25,7 +28,10 @@ export class Bazaar {
 	}
 
 	getProductInternalNames(): string[] {
-		return Array.from(this.products.keys())
+		if (this.names == null) {
+			this.names = Array.from(this.products.keys()).sort(TextUtils.naturalSort)
+		}
+		return this.names
 	}
 
 	getLastUpdated() {

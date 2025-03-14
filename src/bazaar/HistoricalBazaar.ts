@@ -31,9 +31,6 @@ export class HistoricalBazaar {
 	insertProducts(bazaar: Bazaar): void {
 		this.db.transaction(() => {
 			for (const product of bazaar.getProducts()) {
-				if (product.getInstabuyPrice() == null && product.getInstasellPrice() == null) {
-					continue
-				}
 				this.insertProduct(
 					bazaar.getLastUpdated(),
 					product.getInternalName(),

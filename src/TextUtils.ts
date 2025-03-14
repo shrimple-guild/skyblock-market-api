@@ -66,6 +66,25 @@ function clean(text: string): string {
 	return stripNonAscii(removeFormatting(text)).trim()
 }
 
+function naturalSort(first: string, second: string): number {
+	const firstGroups = first.split(/(\d+)/)
+	const secondGroups = second.split(/(\d+)/)
+	const minLength = Math.min(firstGroups.length, secondGroups.length)
+	for (let g = 0; g < minLength; g++) {
+		const comp = g % 2 == 0
+			? firstGroups[g].localeCompare(secondGroups[g])
+			: parseInt(firstGroups[g]) - parseInt(secondGroups[g])
+		if (comp != 0) return comp
+	}
+	if (firstGroups.length > secondGroups.length) {
+		return 1
+	} else if (firstGroups.length == secondGroups.length) {
+		return 0
+	} else {
+		return -1
+	}
+}
+
 export const TextUtils = {
 	removeFormatting,
 	toSnakeCase,
@@ -74,5 +93,6 @@ export const TextUtils = {
 	attemptDeromanize,
 	attemptDeromanizeAll,
 	attemptDeromanizeLast,
-	clean
+	clean,
+	naturalSort
 }

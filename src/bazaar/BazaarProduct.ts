@@ -8,6 +8,10 @@ export class BazaarProduct {
 		this.product = product
 	}
 
+	hasOrders() {
+		return this.product.sell_summary.length != 0 || this.product.buy_summary.length != 0
+	}
+
 	getInternalName() {
 		return InternalName.resolveFromBazaarId(this.getProductId())
 	}
