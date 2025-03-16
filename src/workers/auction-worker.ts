@@ -1,5 +1,5 @@
 import { AuctionData } from "../auctions/AuctionData"
-import { Auctions } from "../auctions/Auctions"
+import { Auctions } from "./Auctions"
 import type { WorkerMessage } from "../types/WorkerMessage"
 
 declare var self: Worker

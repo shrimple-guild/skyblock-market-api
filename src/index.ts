@@ -1,12 +1,14 @@
 import { auctionService, bazaarService } from "./services"
-import "./jobs/jobs"
-import { logCategories } from "./logger"
 import type { BunRequest } from "bun"
+import "./logger"
+import log4js from "log4js"
+import { Environment } from "./Environment"
+import { Jobs } from "./jobs/jobs"
 
-const logger = logCategories.getLogger("api")
+await Jobs.updateItemNames.execute()
+Jobs.scheduleAll()
 
-const port = Bun.env["MARKET_API_PORT"]
-if (!port) throw new Error(`Required environment variable \"MARKET_API_PORT\" not set.`)
+const logger = log4js.getLogger("api")
 
 function handleRequest(request: BunRequest, handler: () => Promise<Response> | Response) {
 	const url = new URL(request.url)
@@ -22,8 +24,10 @@ function handleRequest(request: BunRequest, handler: () => Promise<Response> | R
 	}
 }
 
+logger.log("Starting server.")
+
 Bun.serve({
-	port,
+	port: Environment.MARKET_API_PORT,
 	routes: {
 		"/lowestbin/:query": (request) => {
 			return handleRequest(request, () => {

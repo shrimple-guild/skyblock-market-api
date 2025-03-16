@@ -1,4 +1,4 @@
-export type ApiSkyblockBazaarJson = {
+export type ApiSkyblockBazaarResponse = {
 	success: boolean
 	lastUpdated: number
 	products: Record<string, ApiSkyblockBazaarProduct>

@@ -1,5 +1,5 @@
 import { InternalName } from "../items/InternalName"
-import type { ApiSkyblockAuctionJson } from "../types/ApiSkyblockAuctionJson"
+import type { ApiSkyblockAuctionsResponse } from "../types/ApiSkyblockAuctionResponse"
 
 export type Bin = {
 	internalName: string
@@ -36,9 +36,9 @@ async function fetchBins(): Promise<{ timestamp: number; bins: Bin[] }> {
 	return { timestamp: firstPage.lastUpdated, bins: lowestBins }
 }
 
-async function fetchPageAuctions(page: number): Promise<ApiSkyblockAuctionJson> {
+async function fetchPageAuctions(page: number): Promise<ApiSkyblockAuctionsResponse> {
 	const response = await fetch(`${AUCTION_URL}?page=${page}`)
-	return response.json() as Promise<ApiSkyblockAuctionJson>
+	return response.json() as Promise<ApiSkyblockAuctionsResponse>
 }
 
 export const Auctions = { fetchBins }

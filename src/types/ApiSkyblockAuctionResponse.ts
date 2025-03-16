@@ -1,4 +1,4 @@
-export type ApiSkyblockAuctionJson = {
+export type ApiSkyblockAuctionsResponse = {
 	success: true
 	page: number
 	totalPages: number

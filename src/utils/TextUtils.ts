@@ -71,9 +71,10 @@ function naturalSort(first: string, second: string): number {
 	const secondGroups = second.split(/(\d+)/)
 	const minLength = Math.min(firstGroups.length, secondGroups.length)
 	for (let g = 0; g < minLength; g++) {
-		const comp = g % 2 == 0
-			? firstGroups[g].localeCompare(secondGroups[g])
-			: parseInt(firstGroups[g]) - parseInt(secondGroups[g])
+		const comp =
+			g % 2 == 0
+				? firstGroups[g].localeCompare(secondGroups[g])
+				: parseInt(firstGroups[g]) - parseInt(secondGroups[g])
 		if (comp != 0) return comp
 	}
 	if (firstGroups.length > secondGroups.length) {

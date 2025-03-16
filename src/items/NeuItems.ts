@@ -2,7 +2,7 @@ import { Parser } from "tar"
 import { Readable } from "stream"
 import path from "path"
 import type { NeuItemJson } from "../types/NeuItemJson"
-import { TextUtils } from "../TextUtils"
+import { TextUtils } from "../utils/TextUtils"
 import { ItemNameResolver } from "./ItemNameResolver"
 
 export class NeuItemService {

@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite"
-import type { Bin } from "./Auctions"
+import type { Bin } from "../workers/Auctions"
 
 export class AuctionData {
 	private db: Database

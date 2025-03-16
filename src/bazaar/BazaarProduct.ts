@@ -1,5 +1,5 @@
 import { InternalName } from "../items/InternalName"
-import type { ApiSkyblockBazaarOrder, ApiSkyblockBazaarProduct } from "../types/ApiSkyblockBazaarJson"
+import type { ApiSkyblockBazaarOrder, ApiSkyblockBazaarProduct } from "../types/ApiSkyblockBazaarResponse"
 
 export class BazaarProduct {
 	private product: ApiSkyblockBazaarProduct

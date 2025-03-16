@@ -1,26 +1,37 @@
 import cron from "node-cron"
 import { auctionService, bazaarService, neuItemService } from "../services"
 import type { WorkerMessage } from "../types/WorkerMessage"
-import { logCategories } from "../logger"
+import log4js from "log4js"
 import { MillisecondDurations } from "../constants"
 
-const logger = logCategories.getLogger("jobs")
+const logger = log4js.getLogger("jobs")
 
-function schedule(name: string, expression: string, task: () => Promise<string> | string | void | Promise<void>) {
-	cron.schedule(expression, async () => {
-		logger.log(`Starting job: ${name}.`)
+type Task = () => Promise<string> | string | void | Promise<void>
+
+class Job {
+	constructor(
+		private name: string,
+		private task: Task
+	) {}
+
+	schedule(expression: string) {
+		cron.schedule(expression, () => this.execute())
+	}
+
+	async execute() {
+		logger.log(`Starting job: ${this.name}`)
 		try {
-			const result = await task()
-			logger.log(`Completed job: ${name}`)
+			const result = await this.task()
+			logger.log(`Completed job: ${this.name}`)
 			if (result) logger.log(result)
 		} catch (e) {
-			logger.error(`Job failed: ${name}`)
+			logger.error(`Job failed: ${this.name}`)
 			logger.error(e)
 		}
-	})
+	}
 }
 
-async function updateItemNames() {
+const updateItemNames = new Job("update item names", async () => {
 	await neuItemService.load()
 	const resolver = neuItemService.getItemResolver()
 	bazaarService.updateItemNames(resolver)
@@ -39,25 +50,23 @@ async function updateItemNames() {
 		logger.warn(`Found ${warnings.length} duplicate display names (${internalNameDuplicateCount} internal names).`)
 		// logger.warn(warnings.join("\n"))
 	}
-}
+})
 
-schedule("update item names", "0 0 12 * * *", () => updateItemNames())
-
-schedule("clean up old auction items", "15 0 0 * * *", () => {
+const auctionCleanup = new Job("clean up old auction", () =>
 	auctionService.deleteOldAuctionData(MillisecondDurations.ONE_MONTH)
-})
+)
 
-schedule("clean up bazaar products", "15 0 6 * * *", () => {
+const bazaarCleanup = new Job("clean up bazaar", () =>
 	bazaarService.deleteOldProductData(MillisecondDurations.ONE_WEEK)
-})
+)
 
-schedule("update bazaar products", "0 * * * * *", async () => {
+const bazaarUpdate = new Job("update bazaar", async () => {
 	await bazaarService.update()
 })
 
-const worker = new Worker("./src/jobs/auction-worker.ts")
+const worker = new Worker("./src/workers/auction-worker.ts")
 
-schedule("update auctions", "30 * * * * *", async () => {
+const auctionUpdate = new Job("update auctions", async () => {
 	worker.postMessage("update-auctions")
 	const promise: Promise<string> = new Promise((resolve, reject) => {
 		const listener = (ev: MessageEvent<WorkerMessage>) => {
@@ -73,4 +82,12 @@ schedule("update auctions", "30 * * * * *", async () => {
 	return promise
 })
 
-export const Jobs = { updateItemNames }
+function scheduleAll() {
+	updateItemNames.schedule("0 0 12 * * *")
+	auctionCleanup.schedule("15 0 0 * * *")
+	bazaarCleanup.schedule("15 0 6 * * *")
+	bazaarUpdate.schedule("0 * * * * *")
+	auctionUpdate.schedule("30 * * * * *")
+}
+
+export const Jobs = { scheduleAll, updateItemNames }

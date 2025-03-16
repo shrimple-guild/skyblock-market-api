@@ -1,19 +1,18 @@
 import fuzzysort from "fuzzysort"
 import { ItemNameResolver, type ItemName } from "../items/ItemNameResolver"
-import type { ApiSkyblockBazaarJson } from "../types/ApiSkyblockBazaarJson"
 import { Bazaar } from "./Bazaar"
 import { HistoricalBazaar } from "./HistoricalBazaar"
-import { TextUtils } from "../TextUtils"
+import { TextUtils } from "../utils/TextUtils"
 import { MillisecondDurations } from "../constants"
+import { Hypixel } from "../hypixel/Hypixel"
 
 export class BazaarService {
-	private static URL = "https://api.hypixel.net/v2/skyblock/bazaar"
 	private bazaar: Bazaar
 	private historical: HistoricalBazaar
 	private itemNames: ItemNameResolver
 
 	static async init(path?: string) {
-		const bazaar = await BazaarService.fetchBazaar()
+		const bazaar = await Hypixel.fetchBazaar()
 		return new BazaarService(bazaar, path)
 	}
 
@@ -23,18 +22,12 @@ export class BazaarService {
 		this.historical = new HistoricalBazaar(path)
 	}
 
-	private static async fetchBazaar(): Promise<Bazaar> {
-		const response = await fetch(BazaarService.URL)
-		const data = (await response.json()) as ApiSkyblockBazaarJson
-		return new Bazaar(data)
-	}
-
 	updateItemNames(newItemNames: ItemNameResolver) {
 		this.itemNames = newItemNames
 	}
 
 	async update() {
-		this.bazaar = await BazaarService.fetchBazaar()
+		this.bazaar = await Hypixel.fetchBazaar()
 		this.historical.insertProducts(this.bazaar)
 	}
 

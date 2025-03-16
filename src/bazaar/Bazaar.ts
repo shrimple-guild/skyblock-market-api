@@ -1,13 +1,13 @@
-import { TextUtils } from "../TextUtils"
-import type { ApiSkyblockBazaarJson } from "../types/ApiSkyblockBazaarJson"
+import { TextUtils } from "../utils/TextUtils"
+import type { ApiSkyblockBazaarResponse } from "../types/ApiSkyblockBazaarResponse"
 import { BazaarProduct } from "./BazaarProduct"
 
 export class Bazaar {
-	private raw: ApiSkyblockBazaarJson
+	private raw: ApiSkyblockBazaarResponse
 	private products: Map<string, BazaarProduct>
 	private names?: string[]
 
-	constructor(raw: ApiSkyblockBazaarJson) {
+	constructor(raw: ApiSkyblockBazaarResponse) {
 		this.raw = raw
 		this.products = new Map()
 		for (const rawProduct of Object.values(this.raw.products)) {
