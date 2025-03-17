@@ -4,7 +4,6 @@ import type { ApiSkyblockProfile, ApiSkyblockProfilesJson } from "../types/ApiSk
 import { HypixelApiError } from "./HypixelApiError"
 import { Environment } from "../Environment"
 import { Bazaar } from "../bazaar/Bazaar"
-import { SkyblockProfiles } from "../skyblock/SkyblockProfiles"
 
 const logger = log4js.getLogger("hypixel")
 const baseUrl = "https://api.hypixel.net"
@@ -14,12 +13,12 @@ async function fetchBazaar(): Promise<Bazaar> {
 	return new Bazaar(bazaarResponse)
 }
 
-async function fetchSkyblockProfiles(uuid: string): Promise<SkyblockProfiles> {
+async function fetchSkyblockProfiles(uuid: string): Promise<ApiSkyblockProfile[]> {
 	const response = await fetchAuthenticated<ApiSkyblockProfilesJson>("/v2/skyblock/profiles", { uuid: uuid })
 	if (response.profiles == null) {
 		throw new Error(`No profiles found for ${uuid}`)
 	}
-	return new SkyblockProfiles(uuid, response.profiles)
+	return response.profiles
 }
 
 async function fetchAuthenticated<T>(endpoint: string, params: SearchParams = {}): Promise<T> {
