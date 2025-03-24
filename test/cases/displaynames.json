@@ -98,5 +98,10 @@
 		"description": "abiphone with color",
 		"internalName": "ABIPHONE_XIV_ENORMOUS_BLACK",
 		"expectedDisplayName": "Abiphone 14 Enormous (Black)"
+	},
+	{
+		"description": "admin item",
+		"internalName": "STAR_SWORD_9000",
+		"expectedDisplayName": "Sword of the Stars 9000"
 	}
 ]

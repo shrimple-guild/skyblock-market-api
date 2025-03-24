@@ -1,10 +1,12 @@
 import { describe, it, expect } from "bun:test"
 import { ItemNameResolver } from "../src/items/ItemNameResolver"
-import type { NeuItemJson } from "../src/types/NeuItemJson"
 import testCases from "./cases/displaynames.json"
 
-const neuItems: NeuItemJson[] = await Bun.file("./test/data/neuitems.json").json()
-const itemResolver = new ItemNameResolver(neuItems, [])
+import neuItems from "./data/neuitems.json"
+import skyblockItems from "./data/skyblockitems.json"
+
+// @ts-expect-error
+const itemResolver = new ItemNameResolver(neuItems, skyblockItems.items)
 
 describe("ItemNameResolver", () => {
 	for (const testCase of testCases) {

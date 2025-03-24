@@ -34,7 +34,6 @@ class Job {
 const updateNeuRepo = new Job("update NEU repo", async () => {
 	await neuRepoManager.load()
 
-
 	// this updates the item resolver - check that items don't have duplicates
 	const resolver = neuItemService.getItemResolver()
 	const duplicates = resolver.checkForDuplicateDisplayNames()
