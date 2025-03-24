@@ -4,7 +4,7 @@ import type { NeuItemJson } from "../src/types/NeuItemJson"
 import testCases from "./cases/displaynames.json"
 
 const neuItems: NeuItemJson[] = await Bun.file("./test/data/neuitems.json").json()
-const itemResolver = new ItemNameResolver(neuItems)
+const itemResolver = new ItemNameResolver(neuItems, [])
 
 describe("ItemNameResolver", () => {
 	for (const testCase of testCases) {

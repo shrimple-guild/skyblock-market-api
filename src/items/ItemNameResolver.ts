@@ -1,17 +1,33 @@
 import { TextUtils } from "../utils/TextUtils"
 import type { NeuItemJson } from "../types/NeuItemJson"
+import type { SkyblockItemJson } from "../types/SkyblockItemJson"
 
+/**
+ * Converts NEU internal names into display names, which are names that describe the item for search and retrieval.
+ * This is not the same as the item name as it appears in Hypixel: it does not have color codes and may use extra
+ * words to disambiguate items.
+ * 
+ * Primarily uses the NEU repo to convert display names. For the case where items do not yet exist in the NEU repository,
+ * the Skyblock items endpoint is a fallback.
+ */
 export class ItemNameResolver {
 	private items: Map<string, ItemName>
 	private static RARITIES = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"]
-	static EMPTY = new ItemNameResolver([])
 
-	constructor(items: NeuItemJson[]) {
+	constructor(neuItems: NeuItemJson[], skyblockItems: SkyblockItemJson[]) {
 		this.items = new Map()
-		for (const json of items) {
-			const internalName = json.internalname
+
+		for (const skyblockItem of skyblockItems) {
+			this.items.set(skyblockItem.id, { 
+				displayName: skyblockItem.name, 
+				internalName: skyblockItem.id
+			})
+		}
+
+		for (const neuItem of neuItems) {
+			const internalName = neuItem.internalname
 			if (this.isItem(internalName)) {
-				const displayName = this.getDisplayNameFromJson(json)
+				const displayName = this.getDisplayNameFromJson(neuItem)
 				this.items.set(internalName, { displayName, internalName })
 			}
 		}

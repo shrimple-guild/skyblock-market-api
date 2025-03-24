@@ -31,12 +31,12 @@ class Job {
 	}
 }
 
-const updateItemNames = new Job("update NEU repo", async () => {
+const updateNeuRepo = new Job("update NEU repo", async () => {
 	await neuRepoManager.load()
-	const resolver = neuItemService.getItemResolver()
-	bazaarService.updateItemNames(resolver)
-	auctionService.updateItemNames(resolver)
 
+
+	// this updates the item resolver - check that items don't have duplicates
+	const resolver = neuItemService.getItemResolver()
 	const duplicates = resolver.checkForDuplicateDisplayNames()
 
 	const warnings: string[] = []
@@ -83,11 +83,11 @@ const auctionUpdate = new Job("update auctions", async () => {
 })
 
 function scheduleAll() {
-	updateItemNames.schedule("0 0 12 * * *")
+	updateNeuRepo.schedule("0 0 12 * * *")
 	auctionCleanup.schedule("15 0 0 * * *")
 	bazaarCleanup.schedule("15 0 6 * * *")
 	bazaarUpdate.schedule("0 * * * * *")
 	auctionUpdate.schedule("30 * * * * *")
 }
 
-export const Jobs = { scheduleAll, updateNeuRepo: updateItemNames }
+export const Jobs = { scheduleAll, updateNeuRepo: updateNeuRepo }

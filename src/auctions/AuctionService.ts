@@ -1,18 +1,15 @@
 import fuzzysort from "fuzzysort"
-import { ItemNameResolver, type ItemName } from "../items/ItemNameResolver"
+import { type ItemName } from "../items/ItemNameResolver"
 import { AuctionData } from "./AuctionData"
+import type { ItemService } from "../items/ItemService"
 
 export class AuctionService {
 	private auctionData: AuctionData
-	private itemNames: ItemNameResolver
+	private itemService: ItemService
 
-	constructor(path: string) {
+	constructor(itemService: ItemService, path: string) {
 		this.auctionData = new AuctionData(path)
-		this.itemNames = ItemNameResolver.EMPTY
-	}
-
-	updateItemNames(newItemNames: ItemNameResolver) {
-		this.itemNames = newItemNames
+		this.itemService = itemService
 	}
 
 	deleteOldAuctionData(maxAge: number) {
@@ -21,7 +18,7 @@ export class AuctionService {
 
 	searchForItem(query: string): ItemName | null {
 		const names = this.auctionData.getInternalNames()
-		const targets = names.map((name) => this.itemNames.resolve(name))
+		const targets = names.map((name) => this.itemService.getItemResolver().resolve(name))
 		const fuzzy = fuzzysort.go(query, targets, { key: "displayName", limit: 1 }).at(0)
 		if (!fuzzy) return null
 		return fuzzy.obj

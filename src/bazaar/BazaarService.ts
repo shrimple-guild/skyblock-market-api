@@ -5,25 +5,22 @@ import { HistoricalBazaar } from "./HistoricalBazaar"
 import { TextUtils } from "../utils/TextUtils"
 import { MillisecondDurations } from "../constants"
 import { Hypixel } from "../hypixel/Hypixel"
+import type { ItemService } from "../items/ItemService"
 
 export class BazaarService {
 	private bazaar: Bazaar
 	private historical: HistoricalBazaar
-	private itemNames: ItemNameResolver
+	private itemService: ItemService
 
-	static async init(path?: string) {
+	static async init(itemService: ItemService, path?: string) {
 		const bazaar = await Hypixel.fetchBazaar()
-		return new BazaarService(bazaar, path)
+		return new BazaarService(itemService, bazaar, path)
 	}
 
-	private constructor(bazaar: Bazaar, path?: string) {
+	private constructor(itemService: ItemService, bazaar: Bazaar, path?: string) {
 		this.bazaar = bazaar
-		this.itemNames = ItemNameResolver.EMPTY
+		this.itemService = itemService
 		this.historical = new HistoricalBazaar(path)
-	}
-
-	updateItemNames(newItemNames: ItemNameResolver) {
-		this.itemNames = newItemNames
 	}
 
 	async update() {
@@ -38,7 +35,7 @@ export class BazaarService {
 	searchForProduct(query: string): ItemName | null {
 		const queryCleaned = TextUtils.attemptDeromanizeAll(query)
 		const names = this.bazaar.getProductInternalNames()
-		const targets = names.map((name) => this.itemNames.resolve(name))
+		const targets = names.map((name) => this.itemService.getItemResolver().resolve(name))
 		const fuzzy = fuzzysort.go(queryCleaned, targets, { key: "displayName", limit: 1 }).at(0)
 		if (!fuzzy) return null
 		return fuzzy.obj

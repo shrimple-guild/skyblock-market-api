@@ -33,7 +33,7 @@ export class NeuRepoManager {
 
         if (!this.isLoaded) {
             const repository = new NeuRepo(await this.fetchRepoFiles())
-            this.notifyListeners(repository)
+            await this.notifyListeners(repository)
         }
     }
 
@@ -41,10 +41,8 @@ export class NeuRepoManager {
         this.listeners.push(listener)
     }
 
-    private notifyListeners(repository: NeuRepo) {
-        for (const listener of this.listeners) {
-            listener(repository)
-        }
+    private async notifyListeners(repository: NeuRepo) {
+        await Promise.all(this.listeners.map(listener => listener(repository)))
     }
 
     private async fetchLatestCommit(): Promise<string> {
