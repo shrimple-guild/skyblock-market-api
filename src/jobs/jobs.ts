@@ -1,5 +1,5 @@
 import cron from "node-cron"
-import { auctionService, bazaarService, neuItemService } from "../services"
+import { auctionService, bazaarService, neuItemService, neuRepoManager } from "../services"
 import type { WorkerMessage } from "../types/WorkerMessage"
 import log4js from "log4js"
 import { MillisecondDurations } from "../constants"
@@ -31,8 +31,8 @@ class Job {
 	}
 }
 
-const updateItemNames = new Job("update item names", async () => {
-	await neuItemService.load()
+const updateItemNames = new Job("update NEU repo", async () => {
+	await neuRepoManager.load()
 	const resolver = neuItemService.getItemResolver()
 	bazaarService.updateItemNames(resolver)
 	auctionService.updateItemNames(resolver)
@@ -90,4 +90,4 @@ function scheduleAll() {
 	auctionUpdate.schedule("30 * * * * *")
 }
 
-export const Jobs = { scheduleAll, updateItemNames }
+export const Jobs = { scheduleAll, updateNeuRepo: updateItemNames }

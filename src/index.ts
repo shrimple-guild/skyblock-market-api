@@ -5,7 +5,8 @@ import log4js from "log4js"
 import { Environment } from "./Environment"
 import { Jobs } from "./jobs/jobs"
 
-await Jobs.updateItemNames.execute()
+
+await Jobs.updateNeuRepo.execute()
 Jobs.scheduleAll()
 
 const logger = log4js.getLogger("api")
