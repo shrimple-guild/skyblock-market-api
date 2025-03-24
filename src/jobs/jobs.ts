@@ -48,7 +48,7 @@ const updateNeuRepo = new Job("update NEU repo", async () => {
 	}
 	if (warnings.length > 0) {
 		logger.warn(`Found ${warnings.length} duplicate display names (${internalNameDuplicateCount} internal names).`)
-		// logger.warn(warnings.join("\n"))
+		logger.trace(warnings.join("\n"))
 	}
 })
 
