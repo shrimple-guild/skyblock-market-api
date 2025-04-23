@@ -6,7 +6,7 @@ import type { SkyblockItemJson } from "../types/SkyblockItemJson"
  * Converts NEU internal names into display names, which are names that describe the item for search and retrieval.
  * This is not the same as the item name as it appears in Hypixel: it does not have color codes and may use extra
  * words to disambiguate items.
- * 
+ *
  * Primarily uses the NEU repo to convert display names. For the case where items do not yet exist in the NEU repository,
  * the Skyblock items endpoint is a fallback.
  */
@@ -18,8 +18,8 @@ export class ItemNameResolver {
 		this.items = new Map()
 
 		for (const skyblockItem of skyblockItems) {
-			this.items.set(skyblockItem.id, { 
-				displayName: skyblockItem.name, 
+			this.items.set(skyblockItem.id, {
+				displayName: skyblockItem.name,
 				internalName: skyblockItem.id
 			})
 		}

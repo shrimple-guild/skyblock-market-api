@@ -7,5 +7,5 @@ function getEnv(name: string): string {
 }
 
 export const Environment = {
-	MARKET_API_PORT: getEnv("MARKET_API_PORT"),
+	MARKET_API_PORT: getEnv("MARKET_API_PORT")
 }

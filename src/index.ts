@@ -5,7 +5,6 @@ import log4js from "log4js"
 import { Environment } from "./Environment"
 import { Jobs } from "./jobs/jobs"
 
-
 await Jobs.updateNeuRepo.execute()
 Jobs.scheduleAll()
 
