@@ -17,7 +17,6 @@
 		"typescript": "^5"
 	},
 	"dependencies": {
-		"chalk": "^5.4.1",
 		"fuzzysort": "^3.1.0",
 		"keyv": "^5.3.3",
 		"log4js": "^6.9.1",

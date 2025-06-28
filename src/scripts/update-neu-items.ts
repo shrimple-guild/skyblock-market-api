@@ -14,7 +14,7 @@ await neuRepoManager.load()
 
 console.log(`Loaded ${newItems.length} items.`)
 
-const path = "./test/data/neuitems.json";
+const path = "./test/data/neuitems.json"
 const file = Bun.file(path)
 await Bun.write(file, JSON.stringify(newItems, null, 4))
 console.log("Wrote NEU items to file, exiting.")
