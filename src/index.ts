@@ -32,9 +32,10 @@ Bun.serve({
 		"/lowestbin/:query": (request) => {
 			return handleRequest(request, () => {
 				logger.log(`Called: ${new URL(request.url).pathname}`)
-				const item = auctionService.searchForItem(request.params.query)
+				const query = request.params.query
+				const item = auctionService.searchForItem(query)
 				if (!item) {
-					return new Response(`No item found matching "${item}."`, { status: 404 })
+					return new Response(`No item found matching "${query}."`, { status: 404 })
 				}
 				return Response.json(auctionService.getItemData(item))
 			})
