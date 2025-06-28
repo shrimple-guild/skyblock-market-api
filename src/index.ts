@@ -52,6 +52,19 @@ Bun.serve({
 			})
 		},
 
+		"/bazaar": (request) => {
+			return handleRequest(request, () => {
+				const productData = bazaarService.getAllProducts().map((product) => {
+					return bazaarService.getProductData(product)
+				})
+				const allProducts: Record<string, any> = {}
+				for (const product of productData) {
+					allProducts[product.internalName] = product
+				}
+				return Response.json(allProducts)
+			})
+		},
+
 		"/bazaar/:query/bulk/:quantity": (request) => {
 			return handleRequest(request, () => {
 				const query = request.params.query

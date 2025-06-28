@@ -102,7 +102,7 @@ export class ItemNameResolver {
 		// handle attribute display names
 		const attributeMatcher = /ATTRIBUTE_SHARD_(\D+);(\d+)/.exec(itemData.internalname)
 		if (attributeMatcher) {
-			return `${TextUtils.toTitleCase(attributeMatcher[1])} ${attributeMatcher[2]} Attribute Shard`
+			return `${cleaned} Shard (${TextUtils.toTitleCase(attributeMatcher[1])})`
 		}
 
 		// handle enchanted book bundles
@@ -132,6 +132,8 @@ export type ItemName = {
 	displayName: string
 	internalName: string
 }
+
+export type BazaarItemName = ItemName & { stockName: string }
 
 const irregularItemNames: Record<string, string | undefined> = {
 	GOD_POTION: "God Potion (Legacy)",

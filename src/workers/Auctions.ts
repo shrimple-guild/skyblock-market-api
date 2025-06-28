@@ -1,5 +1,5 @@
-import { InternalName } from "../items/InternalName"
 import type { ApiSkyblockAuctionsResponse } from "../types/ApiSkyblockAuctionResponse"
+import { resolveAuctionItem } from "./AuctionInternalNameResolver"
 
 export type Bin = {
 	internalName: string
@@ -22,7 +22,7 @@ async function fetchBins(): Promise<{ timestamp: number; bins: Bin[] }> {
 	for (const page of pages) {
 		for (const auction of page.auctions) {
 			if (!auction.bin) continue
-			const internalName = InternalName.resolveFromBytes(auction.item_bytes)
+			const internalName = resolveAuctionItem(auction.item_bytes)
 			const currentLowestBin = lowestBinMap.get(internalName) ?? Infinity
 			lowestBinMap.set(internalName, Math.min(auction.starting_bid, currentLowestBin))
 		}

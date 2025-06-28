@@ -15,7 +15,7 @@ describe("Bazaar", () => {
 	it("should get a product by its product id", () => {
 		const bazaar = new Bazaar(bazaarResponse)
 		const chiliPepper = bazaar.getProduct("CHILI_PEPPER")
-		expect(chiliPepper.getProductId()).toBe("CHILI_PEPPER")
+		expect(chiliPepper.getStockName()).toBe("CHILI_PEPPER")
 	})
 })
 

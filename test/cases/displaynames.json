@@ -36,8 +36,13 @@
 	},
 	{
 		"description": "attribute shard",
-		"internalName": "ATTRIBUTE_SHARD_MANA_REGENERATION;4",
-		"expectedDisplayName": "Mana Regeneration 4 Attribute Shard"
+		"internalName": "ATTRIBUTE_SHARD_MANA_REGENERATION;1",
+		"expectedDisplayName": "XYZ Shard (Mana Regeneration)"
+	},
+	{
+		"description": "attribute shard (new)",
+		"internalName": "ATTRIBUTE_SHARD_ECHO_OF_BOXES;1",
+		"expectedDisplayName": "Cuboa Shard (Echo Of Boxes)"
 	},
 	{
 		"description": "pet skill xp boost",

@@ -1,6 +1,7 @@
 import { Database } from "bun:sqlite"
 import type { Bazaar } from "./Bazaar"
 
+// NOTE: all uses of "internal name" in this class mean the bazaar stock name, not the NEU internal name
 export class HistoricalBazaar {
 	private db: Database
 
@@ -33,7 +34,7 @@ export class HistoricalBazaar {
 			for (const product of bazaar.getProducts()) {
 				this.insertProduct(
 					bazaar.getLastUpdated(),
-					product.getInternalName(),
+					product.getStockName(),
 					product.getInstabuyPrice(),
 					product.getInstasellPrice()
 				)
@@ -41,9 +42,9 @@ export class HistoricalBazaar {
 		})()
 	}
 
-	insertProduct(time: number, internalName: string, instaBuy: number | null, instaSell: number | null): void {
+	insertProduct(time: number, stockName: string, instaBuy: number | null, instaSell: number | null): void {
 		this.db.transaction(() => {
-			this.db.query("INSERT OR IGNORE INTO bazaar_items (internal_name) VALUES (?)").run(internalName)
+			this.db.query("INSERT OR IGNORE INTO bazaar_items (internal_name) VALUES (?)").run(stockName)
 
 			this.db
 				.query(
@@ -53,11 +54,11 @@ export class HistoricalBazaar {
 					FROM bazaar_items
 					WHERE internal_name = ?2`
 				)
-				.run(Math.floor(time / 1000), internalName, instaBuy, instaSell)
+				.run(Math.floor(time / 1000), stockName, instaBuy, instaSell)
 		})()
 	}
 
-	getAveragePrice(internalName: string, time: number, window: number) {
+	getAveragePrice(stockName: string, time: number, window: number) {
 		const stmt = `
             SELECT AVG(insta_buy) AS avgInstaBuy, AVG(insta_sell) AS avgInstaSell
             FROM bazaar_ts
@@ -66,7 +67,7 @@ export class HistoricalBazaar {
         `
 		const result = this.db.query<AverageResult, AveragePriceQuery>(stmt).get({
 			current: Math.floor(time / 1000),
-			internalName: internalName,
+			internalName: stockName,
 			window: Math.floor(window / 1000)
 		})
 		return {
