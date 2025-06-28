@@ -1,4 +1,5 @@
 import nbt, { simplify, type NBT } from "prismarine-nbt"
+import { PetUtils } from "../utils/PetUtils"
 
 export function resolveAuctionItem(itemBytes: string): string {
 	const buffer = Buffer.from(itemBytes, "base64")
@@ -44,7 +45,7 @@ function resolvePet(extraAttributes: any, itemTag: any): string {
 	const tier = getTier(petTag.tier)
 	const levelRegex = /§7\[Lvl (\d{1,3})\].*/.exec(itemTag.display.Name)
 	const level = levelRegex ? parseInt(levelRegex[1]) : 0
-	const maxLevel = petTag.type == "GOLDEN_DRAGON" ? 200 : 100
+	const maxLevel = PetUtils.maxPetLevel(petTag.type)
 	const bonus = level == maxLevel ? "+MAX" : ""
 	return `${petTag.type};${tier}${bonus}`
 }

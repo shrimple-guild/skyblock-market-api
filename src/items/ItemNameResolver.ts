@@ -1,6 +1,7 @@
 import { TextUtils } from "../utils/TextUtils"
 import type { NeuItemJson } from "../types/NeuItemJson"
 import type { SkyblockItemJson } from "../types/SkyblockItemJson"
+import { PetUtils } from "../utils/PetUtils"
 
 /**
  * Converts NEU internal names into display names, which are names that describe the item for search and retrieval.
@@ -53,7 +54,8 @@ export class ItemNameResolver {
 		const item = this.items.get(name)
 		if (item) {
 			if (extraData == "MAX") {
-				const level = item.internalName == "GOLDEN_DRAGON;4" ? 200 : 100
+				const [petType, ..._] = item.internalName.split(";");
+				const level = PetUtils.maxPetLevel(petType)
 				return {
 					internalName: internalName,
 					displayName: `Level ${level} ${item.displayName}`
