@@ -6,7 +6,8 @@
 	"scripts": {
 		"start": "bun ./src/index.ts",
 		"test": "bun test",
-		"format": "bunx prettier --write ."
+		"format": "bunx prettier --write .",
+		"update-test-data": "bun ./src/scripts/update-neu-items.ts"
 	},
 	"devDependencies": {
 		"@types/bun": "latest",

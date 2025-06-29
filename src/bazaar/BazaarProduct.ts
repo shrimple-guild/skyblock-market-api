@@ -1,4 +1,3 @@
-import { InternalName } from "../items/InternalName"
 import type { ApiSkyblockBazaarOrder, ApiSkyblockBazaarProduct } from "../types/ApiSkyblockBazaarResponse"
 
 export class BazaarProduct {
@@ -12,11 +11,7 @@ export class BazaarProduct {
 		return this.product.sell_summary.length != 0 || this.product.buy_summary.length != 0
 	}
 
-	getInternalName() {
-		return InternalName.resolveFromBazaarId(this.getProductId())
-	}
-
-	getProductId() {
+	getStockName() {
 		return this.product.product_id
 	}
 

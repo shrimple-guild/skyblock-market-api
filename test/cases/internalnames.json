@@ -71,21 +71,26 @@
 			"expectedInternalName": "GOD_POTION_2"
 		}
 	],
-	"bazaarId": [
+	"bazaar": [
 		{
 			"description": "enchantment",
-			"bazaarId": "ENCHANTMENT_PROTECTION_6",
+			"bazaarStock": "ENCHANTMENT_PROTECTION_6",
 			"expectedInternalName": "PROTECTION;6"
 		},
 		{
 			"description": "item with damage",
-			"bazaarId": "INK_SACK:3",
+			"bazaarStock": "INK_SACK:3",
 			"expectedInternalName": "INK_SACK-3"
 		},
 		{
 			"description": "normal item",
-			"bazaarId": "INFERNO_VERTEX",
+			"bazaarStock": "INFERNO_VERTEX",
 			"expectedInternalName": "INFERNO_VERTEX"
+		},
+		{
+			"description": "shard",
+			"bazaarStock": "SHARD_VORACIOUS_SPIDER",
+			"expectedInternalName": "ATTRIBUTE_SHARD_ARACHNO_RESISTANCE;1"
 		}
 	]
 }

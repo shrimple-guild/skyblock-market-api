@@ -13,13 +13,13 @@ export class Bazaar {
 		for (const rawProduct of Object.values(this.raw.products)) {
 			const product = new BazaarProduct(rawProduct)
 			if (!product.hasOrders()) continue
-			this.products.set(product.getInternalName(), product)
+			this.products.set(product.getStockName(), product)
 		}
 	}
 
-	getProduct(internalName: string): BazaarProduct {
-		const product = this.products.get(internalName)
-		if (!product) throw new Error(`No product with internal name "${internalName}".`)
+	getProduct(stockName: string): BazaarProduct {
+		const product = this.products.get(stockName)
+		if (!product) throw new Error(`No product with stock name "${stockName}".`)
 		return product
 	}
 
@@ -27,7 +27,7 @@ export class Bazaar {
 		return Array.from(this.products.values())
 	}
 
-	getProductInternalNames(): string[] {
+	getStockNames(): string[] {
 		if (this.names == null) {
 			this.names = Array.from(this.products.keys()).sort(TextUtils.naturalSort)
 		}

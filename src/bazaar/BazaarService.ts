@@ -1,5 +1,5 @@
 import fuzzysort from "fuzzysort"
-import { ItemNameResolver, type ItemName } from "../items/ItemNameResolver"
+import { type BazaarItemName, type ItemName } from "../items/ItemNameResolver"
 import { Bazaar } from "./Bazaar"
 import { HistoricalBazaar } from "./HistoricalBazaar"
 import { TextUtils } from "../utils/TextUtils"
@@ -32,17 +32,24 @@ export class BazaarService {
 		this.historical.deleteOldProducts(Date.now() - maxAge)
 	}
 
-	searchForProduct(query: string): ItemName | null {
+	getAllProducts(): BazaarItemName[] {
+		return this.bazaar.getStockNames().map((stockName) => {
+			const internalName = this.itemService.getInternalNameResolver().resolveBazaarStock(stockName)
+			return { stockName, ...this.itemService.getItemResolver().resolve(internalName) }
+		})
+	}
+
+	searchForProduct(query: string): BazaarItemName | null {
 		const queryCleaned = TextUtils.attemptDeromanizeAll(query)
-		const names = this.bazaar.getProductInternalNames()
-		const targets = names.map((name) => this.itemService.getItemResolver().resolve(name))
-		const fuzzy = fuzzysort.go(queryCleaned, targets, { key: "displayName", limit: 1 }).at(0)
+
+		const fuzzy = fuzzysort.go(queryCleaned, this.getAllProducts(), { key: "displayName", limit: 1 }).at(0)
 		if (!fuzzy) return null
 		return fuzzy.obj
 	}
 
-	getBulkValue(name: ItemName, quantity: number) {
-		const product = this.bazaar.getProduct(name.internalName)
+	getBulkValue(name: BazaarItemName, quantity: number) {
+		const product = this.bazaar.getProduct(name.stockName)
+
 		return {
 			name: name.displayName,
 			internalName: name.internalName,
@@ -51,21 +58,18 @@ export class BazaarService {
 		}
 	}
 
-	getProductData(name: ItemName) {
-		const product = this.bazaar.getProduct(name.internalName)
-		const oneDayAverage = this.historical.getAveragePrice(
-			name.internalName,
-			Date.now(),
-			MillisecondDurations.ONE_DAY
-		)
+	getProductData(name: BazaarItemName) {
+		const product = this.bazaar.getProduct(name.stockName)
+		const oneDayAverage = this.historical.getAveragePrice(name.stockName, Date.now(), MillisecondDurations.ONE_DAY)
 		const oneWeekAverage = this.historical.getAveragePrice(
-			name.internalName,
+			name.stockName,
 			Date.now(),
 			MillisecondDurations.ONE_WEEK
 		)
 		return {
 			name: name.displayName,
 			internalName: name.internalName,
+			stockName: name.stockName,
 			sellMarketValue: product.getBuyPrice(),
 			buyMarketValue: product.getSellPrice(),
 			current: {
