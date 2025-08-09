@@ -49,7 +49,7 @@ export class BazaarProduct {
 		while (amount > 0) {
 			let order = orders[index]
 			if (!order) break
-			let buyAmount = Math.min(amount, order.amount * order.orders)
+			let buyAmount = Math.min(amount, order.amount)
 			money += buyAmount * order.pricePerUnit
 			amount -= buyAmount
 			index++

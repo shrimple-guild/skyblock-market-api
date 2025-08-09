@@ -25,16 +25,19 @@ describe("BazaarProduct", () => {
 		expect(product.getInstabuyPrice()).toBe(191844.6)
 		expect(product.getInstasellPrice()).toBe(178993.9)
 		const { quantity: sellQuantity, value: sellValue } = product.getSellPrice()
-		expect(sellQuantity).toBe(3632)
-		expect(sellValue).toBeCloseTo(650105021.8)
+		expect(sellQuantity).toBe(3578)
+		expect(sellValue).toBeCloseTo(640439351.2)
+
+		const { quantity: fullBuyQuantity } = product.getBuyPrice()
+		expect(fullBuyQuantity).toBe(125)
 
 		const { quantity: buyQuantity, value: buyValue } = product.getBuyPrice(100)
 		expect(buyQuantity).toBe(100)
-		expect(buyValue).toBeCloseTo(19184467.9)
+		expect(buyValue).toBeCloseTo(19184470.4)
 
 		const { quantity: oversellQuantity, value: oversellPrice } = product.getSellPrice(4000)
-		expect(oversellQuantity).toBe(3632)
-		expect(oversellPrice).toBeCloseTo(650105021.8)
+		expect(oversellQuantity).toBe(3578)
+		expect(oversellPrice).toBeCloseTo(640439351.2)
 	})
 
 	it("should get values of an product without orders", () => {
