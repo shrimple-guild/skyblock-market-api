@@ -104,7 +104,7 @@ export class ItemNameResolver {
 		// handle attribute display names
 		const attributeMatcher = /ATTRIBUTE_SHARD_(\D+);(\d+)/.exec(itemData.internalname)
 		if (attributeMatcher) {
-			return `${cleaned} Shard (${TextUtils.toTitleCase(attributeMatcher[1])})`
+			return `${cleaned} (${TextUtils.toTitleCase(attributeMatcher[1])})`
 		}
 
 		// handle enchanted book bundles
