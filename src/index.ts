@@ -1,9 +1,10 @@
-import { auctionService, bazaarService } from "./services"
+import { auctionService, bazaarService, mojangClient } from "./services"
 import type { BunRequest } from "bun"
 import "./logger"
 import log4js from "log4js"
 import { Environment } from "./Environment"
 import { Jobs } from "./jobs/jobs"
+import { UuidUtils } from "./utils/UuidUtils"
 
 await Jobs.updateNeuRepo.execute()
 Jobs.scheduleAll()
@@ -24,7 +25,7 @@ function handleRequest(request: BunRequest, handler: () => Promise<Response> | R
 	}
 }
 
-logger.log("Starting server.")
+logger.log(`Starting server at port ${Environment.MARKET_API_PORT}.`)
 
 Bun.serve({
 	port: Environment.MARKET_API_PORT,
@@ -78,6 +79,28 @@ Bun.serve({
 					return new Response('"quantity" must be a number.', { status: 400 })
 				}
 				return Response.json(bazaarService.getBulkValue(item, quantity))
+			})
+		},
+
+		"/mojang/:query": (request) => {
+			return handleRequest(request, async () => {
+				const query = request.params.query
+
+				const isUuid = UuidUtils.isValidUuid(query)
+				const isName = mojangClient.isValidUsername(query)
+				
+				if (!isUuid && !isName) {
+					return new Response(`Invalid username or UUID.`, { status: 400 })
+				}
+
+				const player = await (isUuid ? mojangClient.getByUuid(query) : mojangClient.getByName(query))
+
+				if (!player) {
+					const queryType = isUuid ? "UUID" : "username";
+					return new Response(`No player found with ${queryType} \"${query}\".`, { status: 404 })
+				}
+
+				return Response.json(player)
 			})
 		}
 	}
