@@ -6,25 +6,28 @@ import { TextUtils } from "../utils/TextUtils"
 import { MillisecondDurations } from "../constants"
 import { Hypixel } from "../hypixel/Hypixel"
 import type { ItemService } from "../items/ItemService"
+import type { HypixelClient } from "../hypixel/HypixelClient"
 
 export class BazaarService {
+	private hypixel: HypixelClient
 	private bazaar: Bazaar
 	private historical: HistoricalBazaar
 	private itemService: ItemService
 
-	static async init(itemService: ItemService, path?: string) {
+	static async init(hypixelClient: HypixelClient, itemService: ItemService, path?: string) {
 		const bazaar = await Hypixel.fetchBazaar()
-		return new BazaarService(itemService, bazaar, path)
+		return new BazaarService(hypixelClient, itemService, bazaar, path)
 	}
 
-	private constructor(itemService: ItemService, bazaar: Bazaar, path?: string) {
+	private constructor(hypixelClient: HypixelClient, itemService: ItemService, bazaar: Bazaar, path?: string) {
+		this.hypixel = hypixelClient
 		this.bazaar = bazaar
 		this.itemService = itemService
 		this.historical = new HistoricalBazaar(path)
 	}
 
 	async update() {
-		this.bazaar = await Hypixel.fetchBazaar()
+		this.bazaar = await this.hypixel.fetchBazaar()
 		this.historical.insertProducts(this.bazaar)
 	}
 

@@ -22,6 +22,25 @@ export class MojangClient {
 		this.nameTtl = options?.nameTtl ?? 24 * 60 * 60 * 1000
 	}
 	
+	/**
+	 * Retrieves Mojang player information based on the provided query.
+	 * The query can be a UUID (optionally hyphenated) or a username.
+	 *
+	 * @param query - The UUID or username to search for.
+	 * @returns A promise that resolves to a `MojangPlayer` or `null` if not found.
+	 */
+	async get(query: string): Promise<MojangPlayer | null> {
+		if (UuidUtils.isValidUuid(query)) {
+			return this.getByUuid(query)
+		}
+
+		if (this.isValidUsername(query)) {
+			return this.getByName(query)
+		}
+
+		return null
+	}
+
 	public async getByName(name: string): Promise<MojangPlayer | null> {
 		const nameKey = this.getNameKey(name)
 		const cached = await this.cache.get(nameKey)

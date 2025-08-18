@@ -54,7 +54,7 @@ export class ItemNameResolver {
 		const item = this.items.get(name)
 		if (item) {
 			if (extraData == "MAX") {
-				const [petType, ..._] = item.internalName.split(";");
+				const [petType, ..._] = item.internalName.split(";")
 				const level = PetUtils.maxPetLevel(petType)
 				return {
 					internalName: internalName,

@@ -88,7 +88,7 @@ Bun.serve({
 
 				const isUuid = UuidUtils.isValidUuid(query)
 				const isName = mojangClient.isValidUsername(query)
-				
+
 				if (!isUuid && !isName) {
 					return new Response(`Invalid username or UUID.`, { status: 400 })
 				}
@@ -96,7 +96,7 @@ Bun.serve({
 				const player = await (isUuid ? mojangClient.getByUuid(query) : mojangClient.getByName(query))
 
 				if (!player) {
-					const queryType = isUuid ? "UUID" : "username";
+					const queryType = isUuid ? "UUID" : "username"
 					return new Response(`No player found with ${queryType} \"${query}\".`, { status: 404 })
 				}
 
