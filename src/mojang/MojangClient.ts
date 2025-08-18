@@ -21,7 +21,7 @@ export class MojangClient {
 		this.uuidTtl = options?.uuidTtl ?? 5 * 60 * 1000
 		this.nameTtl = options?.nameTtl ?? 24 * 60 * 60 * 1000
 	}
-	
+
 	/**
 	 * Retrieves Mojang player information based on the provided query.
 	 * The query can be a UUID (optionally hyphenated) or a username.

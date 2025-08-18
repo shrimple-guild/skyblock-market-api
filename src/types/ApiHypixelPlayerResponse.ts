@@ -4,13 +4,13 @@ export type ApiHypixelPlayerResponse = {
 }
 
 export type ApiHypixelPlayer = {
-    uuid: string,
-    socialMedia?: {
-        links?: {
-            DISCORD?: string
-        }
-    },
-    displayname: string,
+	uuid: string
+	socialMedia?: {
+		links?: {
+			DISCORD?: string
+		}
+	}
+	displayname: string
 	lastLogout: number
 	lastLogin: number
 	firstLogin: number

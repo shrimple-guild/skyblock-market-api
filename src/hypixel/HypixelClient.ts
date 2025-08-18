@@ -9,26 +9,26 @@ type SearchParams = Record<string, string>
 
 export class HypixelClient {
 	private static readonly TIMEOUT_MS = 10 * 1000
-    private static readonly PLAYER_CACHE_TTL = 5 * 60 * 1000
+	private static readonly PLAYER_CACHE_TTL = 5 * 60 * 1000
 
 	private readonly baseUrl: string
 	private readonly apiKey: string
-    private readonly playerCache: Keyv<HypixelPlayer>
-    
+	private readonly playerCache: Keyv<HypixelPlayer>
+
 	constructor(baseUrl: string, apiKey: string) {
 		this.baseUrl = baseUrl
 		this.apiKey = apiKey
-        this.playerCache = new Keyv();
+		this.playerCache = new Keyv()
 	}
 
-    public async getPlayer(uuid: string): Promise<HypixelPlayer> {
-        const cached = await this.playerCache.get(uuid)
-        if (cached) return cached
+	public async getPlayer(uuid: string): Promise<HypixelPlayer> {
+		const cached = await this.playerCache.get(uuid)
+		if (cached) return cached
 
-        const player = await this.fetchPlayer(uuid)
-        await this.playerCache.set(uuid, player, HypixelClient.PLAYER_CACHE_TTL)
-        return player
-    }
+		const player = await this.fetchPlayer(uuid)
+		await this.playerCache.set(uuid, player, HypixelClient.PLAYER_CACHE_TTL)
+		return player
+	}
 
 	private async fetchPlayer(uuid: string): Promise<HypixelPlayer> {
 		const response = await this.fetchHypixel<ApiHypixelPlayerResponse>("/player", { uuid: uuid }, true)

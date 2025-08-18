@@ -1,5 +1,5 @@
-import type { ApiHypixelPlayer } from "../types/ApiHypixelPlayerResponse";
-import { UuidUtils } from "../utils/UuidUtils";
+import type { ApiHypixelPlayer } from "../types/ApiHypixelPlayerResponse"
+import { UuidUtils } from "../utils/UuidUtils"
 
 export type HypixelStatus = { status: "online" } | { status: "offline"; lastSeen: Date } | { status: "unknown" }
 
