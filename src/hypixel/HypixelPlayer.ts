@@ -4,12 +4,13 @@ import { UuidUtils } from "../utils/UuidUtils"
 export type HypixelStatus = { status: "online" } | { status: "offline"; lastSeen: Date } | { status: "unknown" }
 
 export class HypixelPlayer {
-	private readonly uuid: string
-	private readonly hypixelName: string
-	private readonly joined: Date
-	private readonly status: HypixelStatus
-	private readonly raw: any
-	private readonly discordTag?: string
+	readonly uuid: string
+	readonly hypixelName: string
+	readonly joined: Date
+	readonly status: HypixelStatus
+	private readonly raw: ApiHypixelPlayer
+
+	readonly discordTag?: string
 
 	constructor(raw: ApiHypixelPlayer) {
 		this.raw = raw
