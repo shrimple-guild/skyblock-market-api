@@ -6,7 +6,7 @@ export class HypixelGuild {
 	readonly name: string
 	readonly created: Date
 	readonly members: HypixelGuildMember[]
-	private readonly raw: ApiHypixelGuild
+	readonly raw: ApiHypixelGuild
 
 	constructor(raw: ApiHypixelGuild) {
 		this.raw = raw

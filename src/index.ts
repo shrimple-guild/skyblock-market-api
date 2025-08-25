@@ -1,4 +1,4 @@
-import { auctionService, bazaarService, mojangClient } from "./services"
+import { auctionService, bazaarService, hypixelClient, mojangClient } from "./services"
 import type { BunRequest } from "bun"
 import "./logger"
 import log4js from "log4js"
@@ -30,6 +30,64 @@ logger.log(`Starting server at port ${Environment.MARKET_API_PORT}.`)
 Bun.serve({
 	port: Environment.MARKET_API_PORT,
 	routes: {
+		"/hypixel/raw/player/:uuid": (request) => {
+			return handleRequest(request, async () => {
+				const uuid = request.params.uuid
+
+				if (!UuidUtils.isValidUuid(uuid)) {
+					return new Response(`Invalid UUID format: "${uuid}".`, { status: 400 })
+				}
+
+				const player = await hypixelClient.getPlayer(uuid)
+
+				if (!player) {
+					return new Response(`No player found for UUID "${uuid}".`, { status: 404 })
+				}
+
+				return Response.json(player.raw)
+			})
+		},
+
+		"/hypixel/raw/guild/:mode/:query": (request) => {
+			return handleRequest(request, async () => {
+				const { mode, query } = request.params
+
+				const validModes = ["name", "player", "id"]
+
+				if (!validModes.includes(mode)) {
+					return new Response(`Invalid mode: "${mode}". Valid modes are ${validModes.join(", ")}.`, {
+						status: 400
+					})
+				}
+
+				const guild = await hypixelClient.getGuild(mode, query)
+
+				if (!guild) {
+					return new Response(`No guild found for "${query}" (mode: ${mode}).`, { status: 404 })
+				}
+
+				return Response.json(guild.raw)
+			})
+		},
+
+		"/hypixel/raw/skyblock/profiles/:uuid": (request) => {
+			return handleRequest(request, async () => {
+				const uuid = request.params.uuid
+
+				if (!UuidUtils.isValidUuid(uuid)) {
+					return new Response(`Invalid UUID format: "${uuid}".`, { status: 400 })
+				}
+
+				const profiles = await hypixelClient.getSkyblockProfiles(uuid)
+
+				if (!profiles || profiles.length === 0) {
+					return new Response(`No SkyBlock profiles found for UUID "${uuid}".`, { status: 404 })
+				}
+
+				return Response.json(profiles)
+			})
+		},
+
 		"/lowestbin/:query": (request) => {
 			return handleRequest(request, () => {
 				logger.log(`Called: ${new URL(request.url).pathname}`)

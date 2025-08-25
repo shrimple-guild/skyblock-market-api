@@ -17,9 +17,11 @@
 		"typescript": "^5"
 	},
 	"dependencies": {
+		"@types/memoizee": "^0.4.12",
 		"fuzzysort": "^3.1.0",
 		"keyv": "^5.3.3",
 		"log4js": "^6.9.1",
+		"memoizee": "^0.4.17",
 		"node-cron": "^3.0.3",
 		"prismarine-nbt": "^2.7.0",
 		"romans": "^3.0.0",

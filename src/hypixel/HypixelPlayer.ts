@@ -8,7 +8,7 @@ export class HypixelPlayer {
 	readonly hypixelName: string
 	readonly joined: Date
 	readonly status: HypixelStatus
-	private readonly raw: ApiHypixelPlayer
+	readonly raw: ApiHypixelPlayer
 
 	readonly discordTag?: string
 

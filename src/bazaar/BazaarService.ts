@@ -4,7 +4,6 @@ import { Bazaar } from "./Bazaar"
 import { HistoricalBazaar } from "./HistoricalBazaar"
 import { TextUtils } from "../utils/TextUtils"
 import { MillisecondDurations } from "../constants"
-import { Hypixel } from "../hypixel/Hypixel"
 import type { ItemService } from "../items/ItemService"
 import type { HypixelClient } from "../hypixel/HypixelClient"
 
@@ -15,7 +14,7 @@ export class BazaarService {
 	private itemService: ItemService
 
 	static async init(hypixelClient: HypixelClient, itemService: ItemService, path?: string) {
-		const bazaar = await Hypixel.fetchBazaar()
+		const bazaar = await hypixelClient.fetchBazaar()
 		return new BazaarService(hypixelClient, itemService, bazaar, path)
 	}
 
