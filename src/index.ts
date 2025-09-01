@@ -1,10 +1,16 @@
-import { auctionService, bazaarService, hypixelClient, mojangClient } from "./services"
+import { auctionService, bazaarService, hypixelClient, mojangClient, neuRepoManager } from "./services"
 import type { BunRequest } from "bun"
 import "./logger"
 import log4js from "log4js"
 import { Environment } from "./Environment"
 import { Jobs } from "./jobs/jobs"
 import { UuidUtils } from "./utils/UuidUtils"
+import { NeuBestiary } from "./neu/NeuBestiary"
+
+let neuBestiary: NeuBestiary
+neuRepoManager.addListener((repo) => {
+	neuBestiary = new NeuBestiary(repo.getConstant("bestiary"))
+})
 
 await Jobs.updateNeuRepo.execute()
 Jobs.scheduleAll()
@@ -70,21 +76,38 @@ Bun.serve({
 			})
 		},
 
-		"/hypixel/raw/skyblock/profiles/:uuid": (request) => {
+		"/hypixel/skyblock/profiles/:uuid/:profile": (request) => {
 			return handleRequest(request, async () => {
 				const uuid = request.params.uuid
+				const profileQuery = request.params.profile
 
 				if (!UuidUtils.isValidUuid(uuid)) {
 					return new Response(`Invalid UUID format: "${uuid}".`, { status: 400 })
 				}
 
 				const profiles = await hypixelClient.getSkyblockProfiles(uuid)
+				const profile = profiles.getByQuery(profileQuery)
+				return Response.json(profile?.getQueriedMember())
+			})
+		},
 
-				if (!profiles || profiles.length === 0) {
-					return new Response(`No SkyBlock profiles found for UUID "${uuid}".`, { status: 404 })
+		"/hypixel/skyblock/profiles/:uuid/:profile/bestiary": (request) => {
+			return handleRequest(request, async () => {
+				const uuid = request.params.uuid
+				const profileQuery = request.params.profile
+
+				const profiles = await hypixelClient.getSkyblockProfiles(uuid)
+				const profile = profiles.getByQuery(profileQuery)
+
+				if (!profile) {
+					return new Response(`Invalid profile`, { status: 400 })
 				}
+				const member = profile.getQueriedMember()
+				const families = neuBestiary.getBestiaryFamilies().map((family) => {
+					return neuBestiary.getBestiary(family, member)
+				})
 
-				return Response.json(profiles)
+				return Response.json(families)
 			})
 		},
 

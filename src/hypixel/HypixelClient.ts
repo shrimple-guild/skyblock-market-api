@@ -7,7 +7,8 @@ import { HypixelPlayer } from "./HypixelPlayer"
 import type { ApiHypixelPlayerResponse } from "../types/ApiHypixelPlayerResponse"
 import { HypixelGuild } from "./HypixelGuild"
 import type { ApiHypixelGuildResponse } from "../types/ApiHypixelGuildResponse"
-
+import type { ApiSkyblockProfilesResponse } from "../types/ApiSkyblockProfilesResponse"
+import { SkyblockProfiles } from "./skyblock/SkyblockProfiles"
 
 export class HypixelClient {
 	private static readonly TIMEOUT_MS = 10 * 1000
@@ -18,7 +19,7 @@ export class HypixelClient {
 
 	public getPlayer: (uuid: string) => Promise<HypixelPlayer>
 	public getGuild: (mode: string, query: string) => Promise<HypixelGuild>
-	public getSkyblockProfiles: (uuid: string) => Promise<any>
+	public getSkyblockProfiles: (uuid: string) => Promise<SkyblockProfiles>
 
 	constructor(baseUrl: string, apiKey: string) {
 		this.baseUrl = baseUrl
@@ -39,10 +40,14 @@ export class HypixelClient {
 		return response.items
 	}
 
-	private async fetchSkyblockProfiles(uuid: string): Promise<any> {
-		const response = await this.fetchHypixel<any>("/v2/skyblock/profiles", { uuid: uuid }, true)
+	private async fetchSkyblockProfiles(uuid: string): Promise<SkyblockProfiles> {
+		const response = await this.fetchHypixel<ApiSkyblockProfilesResponse>(
+			"/v2/skyblock/profiles",
+			{ uuid: uuid },
+			true
+		)
 		if (response.profiles == null) throw new Error(`This player has not joined Skyblock!`)
-		return response.profiles
+		return new SkyblockProfiles(uuid, response.profiles)
 	}
 
 	private async fetchPlayer(uuid: string): Promise<HypixelPlayer> {
