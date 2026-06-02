@@ -31,28 +31,28 @@ export class LevelResolver {
 		return new LevelResolver(thresholds.slice(0, maxLevel))
 	}
 
-	public resolve(value: number): LevelInfo {
-		if (value < 0) {
-			throw new Error("Value must be positive.")
-		}
+	public resolve(value: number, maxLevel = this.thresholds.length): LevelInfo {
+		if (value < 0) throw new Error("Value must be positive.")
+
+		const thresholds = this.thresholds.slice(0, maxLevel)
 		let tier = 0
 
-		for (let i = 0; i < this.thresholds.length; i++) {
-			if (value >= this.thresholds[i]) {
+		for (let i = 0; i < thresholds.length; i++) {
+			if (value >= thresholds[i]) {
 				tier = i + 1
 			} else {
 				break
 			}
 		}
 
-		const maxValue = this.thresholds[this.thresholds.length - 1]
-		const nextLevelAt = this.thresholds[tier] ?? -1
+		const maxValue = thresholds[thresholds.length - 1]
+		const nextLevelAt = thresholds[tier] ?? -1
 
-		const prevThreshold = this.thresholds[tier - 1] ?? 0
+		const prevThreshold = thresholds[tier - 1] ?? 0
 		const progress = value - prevThreshold
 
 		return {
-			maxLevel: this.thresholds.length,
+			maxLevel: thresholds.length,
 			level: tier,
 			maxValue,
 			nextLevelAt,

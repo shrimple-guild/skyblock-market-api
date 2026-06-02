@@ -22,46 +22,6 @@ type BestiaryFamilyInfo = {
 	progress: number
 }
 
-class NeuBestiaryFamily {
-	readonly name: string
-	private readonly levelResolver: LevelResolver
-	private readonly mobs: string[]
-
-	constructor(json: NeuBestiaryFamilyJson, brackets: Map<number, number[]>) {
-		this.name = TextUtils.removeFormatting(json.name)
-
-		const curve = brackets.get(json.bracket)
-		if (!curve) {
-			throw new Error(`No bracket ${json.bracket} found.`)
-		}
-
-		this.levelResolver = LevelResolver.fromCumulativeMaxValue(curve, json.cap)
-		this.mobs = json.mobs
-	}
-
-	public getLevel(member: SkyblockMember): BestiaryFamilyInfo {
-		let kills = 0
-		let deaths = 0
-
-		for (const mob of this.mobs) {
-			kills += member.getBestiaryKills(mob)
-			deaths += member.getBestiaryDeaths(mob)
-		}
-
-		const info = this.levelResolver.resolve(kills)
-
-		return {
-			kills,
-			deaths,
-			tier: info.level,
-			maxTier: info.maxLevel,
-			killsForMax: info.maxValue,
-			killsForNextTier: info.nextLevelAt,
-			progress: info.progress
-		}
-	}
-}
-
 export class NeuBestiary {
 	private readonly families: NeuBestiaryFamily[]
 
@@ -79,7 +39,6 @@ export class NeuBestiary {
 		const flattened: NeuBestiaryFamilyJson[] = []
 
 		for (const category of jsonValues) {
-
 			if (category.hasSubcategories) {
 				for (const subcategory of Object.values(category) as any[]) {
 					if (subcategory.mobs) {
@@ -122,6 +81,46 @@ export class NeuBestiary {
 		return {
 			name: family.name,
 			info: family.getLevel(member)
+		}
+	}
+}
+
+class NeuBestiaryFamily {
+	readonly name: string
+	private readonly levelResolver: LevelResolver
+	private readonly mobs: string[]
+
+	constructor(json: NeuBestiaryFamilyJson, brackets: Map<number, number[]>) {
+		this.name = TextUtils.removeFormatting(json.name)
+
+		const curve = brackets.get(json.bracket)
+		if (!curve) {
+			throw new Error(`No bracket ${json.bracket} found.`)
+		}
+
+		this.levelResolver = LevelResolver.fromCumulativeMaxValue(curve, json.cap)
+		this.mobs = json.mobs
+	}
+
+	public getLevel(member: SkyblockMember): BestiaryFamilyInfo {
+		let kills = 0
+		let deaths = 0
+
+		for (const mob of this.mobs) {
+			kills += member.getBestiaryKills(mob)
+			deaths += member.getBestiaryDeaths(mob)
+		}
+
+		const info = this.levelResolver.resolve(kills)
+
+		return {
+			kills,
+			deaths,
+			tier: info.level,
+			maxTier: info.maxLevel,
+			killsForMax: info.maxValue,
+			killsForNextTier: info.nextLevelAt,
+			progress: info.progress
 		}
 	}
 }

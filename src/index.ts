@@ -6,10 +6,21 @@ import { Environment } from "./Environment"
 import { Jobs } from "./jobs/jobs"
 import { UuidUtils } from "./utils/UuidUtils"
 import { NeuBestiary } from "./neu/NeuBestiary"
+import { LevelResolver } from "./utils/LevelResolver"
+import { NeuSkillLevels } from "./neu/NeuSkillLevels"
+import type { NeuLevelingJson } from "./types/NeuLevelingJson"
 
 let neuBestiary: NeuBestiary
+let neuSkillLevels: NeuSkillLevels
+
 neuRepoManager.addListener((repo) => {
 	neuBestiary = new NeuBestiary(repo.getConstant("bestiary"))
+	const levelingJson = repo.getConstant<NeuLevelingJson>("leveling")
+	if (levelingJson != null) {
+		neuSkillLevels = new NeuSkillLevels(levelingJson)
+	} else {
+		throw new Error("No NEU leveling JSON found.")
+	}
 })
 
 await Jobs.updateNeuRepo.execute()
@@ -36,7 +47,7 @@ logger.log(`Starting server at port ${Environment.MARKET_API_PORT}.`)
 Bun.serve({
 	port: Environment.MARKET_API_PORT,
 	routes: {
-		"/hypixel/raw/player/:uuid": (request) => {
+		"/hypixel/raw/players/:uuid": (request) => {
 			return handleRequest(request, async () => {
 				const uuid = request.params.uuid
 
@@ -54,7 +65,7 @@ Bun.serve({
 			})
 		},
 
-		"/hypixel/raw/guild/:mode/:query": (request) => {
+		"/hypixel/raw/guilds/:mode/:query": (request) => {
 			return handleRequest(request, async () => {
 				const { mode, query } = request.params
 
@@ -76,7 +87,7 @@ Bun.serve({
 			})
 		},
 
-		"/hypixel/skyblock/profiles/:uuid/:profile": (request) => {
+		"/hypixel/skyblock/players/:uuid/profiles/:profile": (request) => {
 			return handleRequest(request, async () => {
 				const uuid = request.params.uuid
 				const profileQuery = request.params.profile
@@ -91,7 +102,7 @@ Bun.serve({
 			})
 		},
 
-		"/hypixel/skyblock/profiles/:uuid/:profile/bestiary": (request) => {
+		"/hypixel/skyblock/players/:uuid/profiles/:profile/bestiary": (request) => {
 			return handleRequest(request, async () => {
 				const uuid = request.params.uuid
 				const profileQuery = request.params.profile
@@ -108,6 +119,28 @@ Bun.serve({
 				})
 
 				return Response.json(families)
+			})
+		},
+
+		"/hypixel/skyblock/players/:uuid/profiles/:profile/skills": (request) => {
+			return handleRequest(request, async () => {
+				const uuid = request.params.uuid
+				const profileQuery = request.params.profile
+
+				const profiles = await hypixelClient.getSkyblockProfiles(uuid)
+				const profile = profiles.getByQuery(profileQuery)
+
+				if (!profile) {
+					return new Response(`Invalid profile`, { status: 400 })
+				}
+
+				const member = profile.getQueriedMember()
+
+				const skills = neuSkillLevels.getSkills().map((skill) => {
+					return neuSkillLevels.getSkillInfo(skill, member)
+				})
+
+				return Response.json(skills)
 			})
 		},
 

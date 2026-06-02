@@ -1,3 +1,4 @@
+import type { SkillName } from "../../neu/NeuSkillLevels"
 import type { ApiSkyblockMember } from "../../types/ApiSkyblockProfilesResponse"
 
 export class SkyblockMember {
@@ -23,6 +24,10 @@ export class SkyblockMember {
 		return this.raw.collection?.[id] ?? 0
 	}
 
+	hasCollectionTier(collectionTier: string) {
+		return this.raw.player_data?.unlocked_coll_tiers?.includes(collectionTier) ?? false
+	}
+
 	// this doesn't quite work, but it might be a hypixel API bug?
 	getUnlockedCollectionTier(id: string): number {
 		const tiers = this.raw.player_data?.unlocked_coll_tiers ?? []
@@ -42,12 +47,36 @@ export class SkyblockMember {
 		return this.raw.player_data?.experience != null
 	}
 
-	getFarmingLevelCap() {
-		return (this.raw.jacobs_contest?.perks?.farming_level_cap ?? 0) + 50
+	private getFarmingLevelBonusCap() {
+		return this.raw.jacobs_contest?.perks?.farming_level_cap ?? 0
 	}
 
-	getTamingLevelCap() {
-		return (this.raw.pets_data?.pet_care?.pet_types_sacrificed?.length ?? 0) + 50
+	private getTamingLevelBonusCap() {
+		return this.raw.pets_data?.pet_care?.pet_types_sacrificed?.length ?? 0
+	}
+
+	private getForagingLevelBonusCap() {
+		let current = 2
+		if (this.isCollectionsApiEnabled()) {
+			current += this.hasCollectionTier("FIG_LOG_8") ? 1 : 0
+			current += this.hasCollectionTier("MANGROVE_LOG_1") ? 1 : 0
+		} else {
+			current += 2
+		}
+		return current
+	}
+
+	getLevelCap(skill: SkillName): number {
+		switch (skill) {
+			case "farming":
+				return this.getFarmingLevelBonusCap()
+			case "taming":
+				return this.getTamingLevelBonusCap()
+			case "foraging":
+				return this.getForagingLevelBonusCap()
+			default:
+				return 0
+		}
 	}
 
 	getSkillXp(name: string) {
