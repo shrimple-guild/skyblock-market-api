@@ -1,5 +1,6 @@
 import { AuctionService } from "./auctions/AuctionService"
 import { BazaarService } from "./bazaar/BazaarService"
+import { EliteApiClient } from "./elite/EliteApiClient"
 import { Environment } from "./Environment"
 import { HypixelClient } from "./hypixel/HypixelClient"
 import { ItemService } from "./items/ItemService"
@@ -8,6 +9,7 @@ import { NeuRepoManager } from "./neu/NeuRepoManager"
 
 export const neuRepoManager = new NeuRepoManager("NotEnoughUpdates", "NotEnoughUpdates-REPO", "master", "./src/data")
 
+export const eliteClient = new EliteApiClient("https://api.elitebot.dev/")
 export const hypixelClient = new HypixelClient("https://api.hypixel.net/", Environment.HYPIXEL_API_KEY)
 export const neuItemService = new ItemService(hypixelClient, neuRepoManager)
 export const bazaarService = await BazaarService.init(hypixelClient, neuItemService, "./src/data/auction.db")

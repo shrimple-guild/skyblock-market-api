@@ -1,4 +1,4 @@
-import { auctionService, bazaarService, hypixelClient, mojangClient, neuRepoManager } from "./services"
+import { auctionService, bazaarService, eliteClient, hypixelClient, mojangClient, neuRepoManager } from "./services"
 import type { BunRequest } from "bun"
 import "./logger"
 import log4js from "log4js"
@@ -6,7 +6,6 @@ import { Environment } from "./Environment"
 import { Jobs } from "./jobs/jobs"
 import { UuidUtils } from "./utils/UuidUtils"
 import { NeuBestiary } from "./neu/NeuBestiary"
-import { LevelResolver } from "./utils/LevelResolver"
 import { NeuSkillLevels } from "./neu/NeuSkillLevels"
 import type { NeuLevelingJson } from "./types/NeuLevelingJson"
 
@@ -63,7 +62,8 @@ logger.log(`Starting server at port ${Environment.MARKET_API_PORT}.`)
 Bun.serve({
 	port: Environment.MARKET_API_PORT,
 	routes: {
-		"/hypixel/raw/players/:uuid": (request) => {
+		// dev only, not for use
+		"/hypixel/players/:uuid/skyblock/profiles/raw": (request) => {
 			return handleRequest(request, async () => {
 				const uuid = request.params.uuid
 
@@ -81,7 +81,8 @@ Bun.serve({
 			})
 		},
 
-		"/hypixel/raw/guilds/:mode/:query": (request) => {
+		// dev only, not for use
+		"/hypixel/guilds/raw/:mode/:query": (request) => {
 			return handleRequest(request, async () => {
 				const { mode, query } = request.params
 
@@ -103,7 +104,7 @@ Bun.serve({
 			})
 		},
 
-		"/hypixel/skyblock/players/:uuid/profiles/:profile": (request) => {
+		"/hypixel/players/:uuid/skyblock/profiles/:profile": (request) => {
 			return handleRequest(request, async () => {
 				const uuid = request.params.uuid
 				const profileQuery = request.params.profile
@@ -118,7 +119,7 @@ Bun.serve({
 			})
 		},
 
-		"/hypixel/skyblock/players/:uuid/profiles/:profile/bestiary": (request) => {
+		"/hypixel/players/:uuid/skyblock/profiles/:profile/bestiary": (request) => {
 			return handleRequest(request, async () => {
 				const uuid = request.params.uuid
 				const profileQuery = request.params.profile
@@ -138,7 +139,7 @@ Bun.serve({
 			})
 		},
 
-		"/hypixel/skyblock/players/:uuid/profiles/:profile/skills": (request) => {
+		"/hypixel/players/:uuid/skyblock/profiles/:profile/skills": (request) => {
 			return handleRequest(request, async () => {
 				const uuid = request.params.uuid
 				const profileQuery = request.params.profile
@@ -157,6 +158,33 @@ Bun.serve({
 				})
 
 				return Response.json(skills)
+			})
+		},
+
+		// todo: make this a coherent response (currently just bringing in all of the things)
+		"/hypixel/players/:uuid/skyblock/profiles/:profile/farming": (request) => {
+			return handleRequest(request, async () => {
+				const uuid = request.params.uuid
+				const profileQuery = request.params.profile
+
+				const profiles = await hypixelClient.getSkyblockProfiles(uuid)
+				const profile = profiles.getByQuery(profileQuery)
+
+				if (!profile) {
+					return new Response(`Invalid profile`, { status: 400 })
+				}
+
+				const member = profile.getQueriedMember()
+
+				const farmingSkill = neuSkillLevels.getSkillInfo("farming", member);
+				const weight = await eliteClient.getWeight(uuid, profile.getProfileId())
+				const garden = await hypixelClient.getGarden(profile.getProfileId());
+
+				return Response.json({
+					skill: farmingSkill,
+					weight: weight,
+					gardenCrops: garden.getAll()
+				})
 			})
 		},
 

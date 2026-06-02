@@ -9,6 +9,8 @@ import { HypixelGuild } from "./HypixelGuild"
 import type { ApiHypixelGuildResponse } from "../types/ApiHypixelGuildResponse"
 import type { ApiSkyblockProfilesResponse } from "../types/ApiSkyblockProfilesResponse"
 import { SkyblockProfiles } from "./skyblock/SkyblockProfiles"
+import { SkyblockGarden } from "./skyblock/SkyblockGarden"
+import type { ApiSkyblockGardenResponse } from "../types/ApiSkyblockGardenResponse"
 
 export class HypixelClient {
 	private static readonly TIMEOUT_MS = 10 * 1000
@@ -20,6 +22,7 @@ export class HypixelClient {
 	public getPlayer: (uuid: string) => Promise<HypixelPlayer>
 	public getGuild: (mode: string, query: string) => Promise<HypixelGuild>
 	public getSkyblockProfiles: (uuid: string) => Promise<SkyblockProfiles>
+	public getGarden: (profileUuid: string) => Promise<SkyblockGarden>
 
 	constructor(baseUrl: string, apiKey: string) {
 		this.baseUrl = baseUrl
@@ -28,6 +31,7 @@ export class HypixelClient {
 		this.getPlayer = memoize(this.fetchPlayer, { maxAge: HypixelClient.CACHE_TTL })
 		this.getGuild = memoize(this.fetchGuild, { maxAge: HypixelClient.CACHE_TTL })
 		this.getSkyblockProfiles = memoize(this.fetchSkyblockProfiles, { maxAge: HypixelClient.CACHE_TTL })
+		this.getGarden = memoize(this.fetchGarden, { maxAge: HypixelClient.CACHE_TTL })
 	}
 
 	public async fetchBazaar(): Promise<Bazaar> {
@@ -60,6 +64,12 @@ export class HypixelClient {
 		const response = await this.fetchHypixel<ApiHypixelGuildResponse>("/v2/guild", { [mode]: query }, true)
 		if (response.guild == null) throw new Error(`No guild found.`)
 		return new HypixelGuild(response.guild)
+	}
+
+	private async fetchGarden(profileUuid: string): Promise<SkyblockGarden> {
+		const response = await this.fetchHypixel<ApiSkyblockGardenResponse>("/v2/skyblock/garden", { profile: profileUuid }, true)
+		if (response.garden == null) throw new Error(`No garden found for this player.`)
+		return new SkyblockGarden(response.garden)
 	}
 
 	private async fetchHypixel<T>(
