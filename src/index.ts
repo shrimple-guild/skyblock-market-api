@@ -42,6 +42,22 @@ function handleRequest(request: BunRequest, handler: () => Promise<Response> | R
 	}
 }
 
+function handleBulkBazaar(query: string, quantityRaw?: string | null) {
+	const item = bazaarService.searchForProduct(query)
+
+	if (!item) {
+		return new Response(`No item found matching "${query}".`, { status: 404 })
+	}
+
+	const quantity = quantityRaw != null ? parseInt(quantityRaw) : 1
+
+	if (Number.isNaN(quantity)) {
+		return new Response('"quantity" must be a number.', { status: 400 })
+	}
+
+	return Response.json(bazaarService.getBulkValue(item, quantity))
+}
+
 logger.log(`Starting server at port ${Environment.MARKET_API_PORT}.`)
 
 Bun.serve({
@@ -180,19 +196,22 @@ Bun.serve({
 			})
 		},
 
+		"/bazaar/:query/bulk": (request) => {
+			return handleRequest(request, () => {
+				const quantityRaw = new URL(request.url).searchParams.get("quantity")
+				return handleBulkBazaar(
+					request.params.query,
+					quantityRaw
+				)
+			})
+		},
+
 		"/bazaar/:query/bulk/:quantity": (request) => {
 			return handleRequest(request, () => {
-				const query = request.params.query
-				const quantity = parseInt(request.params.quantity)
-				const item = bazaarService.searchForProduct(request.params.query)
-				if (!item) {
-					return new Response(`No item found matching "${query}."`, { status: 404 })
-				}
-
-				if (Number.isNaN(quantity)) {
-					return new Response('"quantity" must be a number.', { status: 400 })
-				}
-				return Response.json(bazaarService.getBulkValue(item, quantity))
+				return handleBulkBazaar(
+					request.params.query,
+					request.params.quantity
+				)
 			})
 		},
 

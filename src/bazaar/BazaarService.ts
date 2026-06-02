@@ -49,7 +49,7 @@ export class BazaarService {
 		return fuzzy.obj
 	}
 
-	getBulkValue(name: BazaarItemName, quantity: number) {
+	getBulkValue(name: BazaarItemName, quantity?: number) {
 		const product = this.bazaar.getProduct(name.stockName)
 
 		return {
